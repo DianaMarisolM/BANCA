@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -53,12 +54,30 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(httpStatus, new RuntimeException("Data enviada es invalida"), errors);
     }
 
+    // @ExceptionHandler
+    // protected ResponseEntity<ErrorResponse> handleException(EmptyResultException
+    // exc) {
+    // HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+    // List<String> errors = new ArrayList<>();
+    // if (exc.getMessage() != null) {
+    // errors.add(exc.getMessage());
+    // }
+    // return buildResponseEntity(httpStatus, new RuntimeException("Data enviada es
+    // invalida"), errors);
+    // }
+
     @ExceptionHandler
     protected ResponseEntity<ErrorResponse> handleException(MethodArgumentTypeMismatchException exc) {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         // Aplica cuando en el URL se envia un argumento invalido, por ejemplo String
         // por Integer
         return buildResponseEntity(httpStatus, new RuntimeException("Tipo de Argumento invalido"));
+    }
+
+    @ExceptionHandler
+    protected ResponseEntity<ErrorResponse> handleException(EmptyResultDataAccessException exc) {
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        return buildResponseEntity(httpStatus, new RuntimeException("Registro no encontrado"));
     }
 
     @ExceptionHandler

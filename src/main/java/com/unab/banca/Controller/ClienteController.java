@@ -66,9 +66,7 @@ public class ClienteController {
     @GetMapping("/list/{valor}")
     public ResponseEntity<Object> findByName(@PathVariable("valor") String valor) {
         if (clienteService.findByNombre(valor) == null) {
-            Message message = new Message();
-            message.setStatus(404);
-            message.setMessage("usuario no encotrado con valor [" + valor + "]");
+            Message message = new Message(404, "usuario no encotrado con valor [" + valor + "]");
             return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(clienteService.findByNombre(valor), HttpStatus.OK);

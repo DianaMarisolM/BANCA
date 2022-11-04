@@ -17,15 +17,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unab.banca.Dto.ClienteDto;
 import com.unab.banca.Entity.Cliente;
+import com.unab.banca.Entity.Message;
 import com.unab.banca.Service.ClienteService;
 import com.unab.banca.Utility.ConvertEntity;
 import com.unab.banca.Utility.Security.Hash;
-import com.unab.banca.Validation.ErrorResponse;
 import com.unab.banca.Validation.InvalidDataException;
 import com.unab.banca.Validation.ResourceNotFoundException;
 
@@ -118,8 +117,11 @@ public class ClienteControllerV2 {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> deleteById(@PathVariable("id") String id) {
-        ErrorResponse object = (ErrorResponse) clienteService.deleteById(id);
-        return new ResponseEntity<>(object, HttpStatus.valueOf(object.getStatus()));
+    public ResponseEntity<Message> deleteById(@PathVariable("id") String id) {
+        // Cliente cliente = clienteService.findById(id)
+        // .orElseThrow(() -> new EmptyResultException("No encontrado cliente con id = "
+        // + id));
+        Message message = clienteService.deleteById(id);
+        return new ResponseEntity<>(message, HttpStatus.valueOf(message.getStatus()));
     }
 }
