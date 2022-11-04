@@ -47,6 +47,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         List<String> errors = exc.getResult().getFieldErrors().stream().map(FieldError::getDefaultMessage)
                 .collect(Collectors.toList());
+        if (exc.getMessage() != null) {
+            errors.add(exc.getMessage());
+        }
         return buildResponseEntity(httpStatus, new RuntimeException("Data enviada es invalida"), errors);
     }
 
@@ -63,7 +66,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         return buildResponseEntity(httpStatus, new RuntimeException("Existen registro relacionados"));
     }
-    
 
     @ExceptionHandler
     protected ResponseEntity<ErrorResponse> handleException(Exception exc) {

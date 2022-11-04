@@ -32,22 +32,24 @@ public class ClienteService {
         return (List<Cliente>) clienteRepository.findAll();
     }
 
- 
-    public Object deleteById(String id){
+    public Object deleteById(String id) {
         try {
             clienteRepository.deleteById(id);
-             ErrorResponse errorResponse= new ErrorResponse(200, "El registro con id "+id+" Fue eliminado" ,new Date(), null);
-             return errorResponse;
+            ErrorResponse errorResponse = new ErrorResponse(200, "El registro con id " + id + " Fue eliminado",
+                    new Date(), null);
+            return errorResponse;
         } catch (Exception e) {
-            ErrorResponse errorResponse= new ErrorResponse(400, "USRMSG-Error al eliminar el registro" ,new Date(), null);
+            ErrorResponse errorResponse = new ErrorResponse(400, "USRMSG-Error al eliminar el registro", new Date(),
+                    null);
             return errorResponse;
         }
- 
+
     }
 
     public Cliente findByNombre(String valor) {
         return clienteRepository.findByNombre(valor);
     }
+
     public List<Cliente> findByNombreContaining(String valor) {
         return clienteRepository.findByNombreContaining(valor);
     }
@@ -56,9 +58,8 @@ public class ClienteService {
         return clienteRepository.findByNombrePartialManual(valor);
     }
 
-    public Optional<Cliente> findById(String valor){
+    public Optional<Cliente> findById(String valor) {
         return clienteRepository.findById(valor);
     }
 
-  
 }

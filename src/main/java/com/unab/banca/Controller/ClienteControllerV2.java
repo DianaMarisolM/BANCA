@@ -47,13 +47,18 @@ public class ClienteControllerV2 {
         if (result.hasErrors()) {
             throw new InvalidDataException(result);
         }
+        if (clienteService.findByNombre(cliente.getNombre()) != null) {
+            throw new InvalidDataException("El valor " + cliente.getNombre() + " para el campo nombre ya existe",
+                    result);
+        }
         cliente.setClave(Hash.sha1(cliente.getClave()));
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto),
                 HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Object> update( @PathVariable("id") String id,@Valid @RequestBody Cliente cliente, BindingResult result) {
+    public ResponseEntity<Object> update(@PathVariable("id") String id, @Valid @RequestBody Cliente cliente,
+            BindingResult result) {
         if (result.hasErrors()) {
             throw new InvalidDataException(result);
         }
@@ -75,7 +80,7 @@ public class ClienteControllerV2 {
 
     @GetMapping("/list/{valor}")
     public ResponseEntity<Object> findByName(@PathVariable("valor") String valor) {
-        if (clienteService.findByNombre(valor)==null) {
+        if (clienteService.findByNombre(valor) == null) {
             throw new ResourceNotFoundException("No encontrado cliente con nombre = " + valor);
         }
         return new ResponseEntity<>(clienteService.findByNombre(valor), HttpStatus.OK);
@@ -84,37 +89,37 @@ public class ClienteControllerV2 {
     @GetMapping("/list/id/{valor}")
     public ResponseEntity<Object> findById(@PathVariable("valor") String valor) {
         Cliente cliente = clienteService.findById(valor)
-        .orElseThrow(() -> new ResourceNotFoundException("No encontrado cliente con id = " + valor));
+                .orElseThrow(() -> new ResourceNotFoundException("No encontrado cliente con id = " + valor));
         return new ResponseEntity<>(convertEntity.convert(cliente, clienteDto), HttpStatus.OK);
     }
 
     @GetMapping("/list/partial/{valor}")
     public ResponseEntity<List<Object>> findByNombreContaining(@PathVariable("valor") String valor) {
-        if (clienteService.findByNombreContaining(valor).size()==0) {
+        if (clienteService.findByNombreContaining(valor).size() == 0) {
             throw new ResourceNotFoundException("No encontrado cliente con nombre = " + valor);
         }
         List<Object> clienteDtoLista = new ArrayList<>();
         for (Cliente cliente : clienteService.findByNombreContaining(valor)) {
             clienteDtoLista.add(convertEntity.convert(cliente, clienteDto));
         }
-        return new ResponseEntity<>(clienteDtoLista,HttpStatus.OK);
+        return new ResponseEntity<>(clienteDtoLista, HttpStatus.OK);
     }
 
     @GetMapping("/list/partialM/{valor}")
     public ResponseEntity<List<Object>> findByNombrePartialManual(@PathVariable("valor") String valor) {
-        if (clienteService.findByNombrePartialManual(valor).size()==0) {
+        if (clienteService.findByNombrePartialManual(valor).size() == 0) {
             throw new ResourceNotFoundException("No encontrado cliente con nombre = " + valor);
         }
         List<Object> clienteDtoLista = new ArrayList<>();
         for (Cliente cliente : clienteService.findByNombrePartialManual(valor)) {
             clienteDtoLista.add(convertEntity.convert(cliente, clienteDto));
         }
-        return new ResponseEntity<>(clienteDtoLista,HttpStatus.OK);
+        return new ResponseEntity<>(clienteDtoLista, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity< Object> deleteById(@PathVariable("id") String id) {
-        ErrorResponse object= (ErrorResponse) clienteService.deleteById(id);
-        return new ResponseEntity<>(object,HttpStatus.valueOf(object.getStatus()));
+    public ResponseEntity<Object> deleteById(@PathVariable("id") String id) {
+        ErrorResponse object = (ErrorResponse) clienteService.deleteById(id);
+        return new ResponseEntity<>(object, HttpStatus.valueOf(object.getStatus()));
     }
 }
