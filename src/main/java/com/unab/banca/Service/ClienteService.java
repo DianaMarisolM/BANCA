@@ -1,6 +1,8 @@
 package com.unab.banca.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -9,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.unab.banca.Dto.ClienteDto;
 import com.unab.banca.Entity.Cliente;
+import com.unab.banca.Entity.Message;
 import com.unab.banca.Repository.ClienteRepository;
+import com.unab.banca.Validation.ErrorResponse;
 
 @Service
 public class ClienteService {
@@ -28,15 +32,17 @@ public class ClienteService {
         return (List<Cliente>) clienteRepository.findAll();
     }
 
-    public String deleteById(String id) {
+ 
+    public Object deleteById(String id){
         try {
             clienteRepository.deleteById(id);
-            return "registro eliminado";
+             ErrorResponse errorResponse= new ErrorResponse(200, "El registro con id "+id+" Fue eliminado" ,new Date(), null);
+             return errorResponse;
         } catch (Exception e) {
-
-            return "Error  eliminando Registro";
+            ErrorResponse errorResponse= new ErrorResponse(400, "USRMSG-Error al eliminar el registro" ,new Date(), null);
+            return errorResponse;
         }
-
+ 
     }
 
     public Cliente findByNombre(String valor) {
@@ -50,11 +56,9 @@ public class ClienteService {
         return clienteRepository.findByNombrePartialManual(valor);
     }
 
-    public ClienteDto convertEntityToDto(Cliente user){
-        modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.LOOSE);
-                ClienteDto clienteDto = new ClienteDto();
-                clienteDto = modelMapper.map(user, ClienteDto.class);
-        return clienteDto;
+    public Optional<Cliente> findById(String valor){
+        return clienteRepository.findById(valor);
     }
+
+  
 }
