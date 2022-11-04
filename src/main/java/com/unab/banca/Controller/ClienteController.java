@@ -3,7 +3,11 @@ package com.unab.banca.Controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unab.banca.Dto.ClienteDto;
 import com.unab.banca.Entity.Cliente;
+import com.unab.banca.Entity.Message;
 import com.unab.banca.Service.ClienteService;
 import com.unab.banca.Utility.ConvertEntity;
+import com.unab.banca.Utility.Security.Hash;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -33,29 +39,39 @@ public class ClienteController {
     ClienteDto clienteDto = new ClienteDto();
 
     @PostMapping("/create")
-    public Object save(@RequestBody Cliente cliente) {
-        return convertEntity.convert(cliente,clienteDto);
+    public ResponseEntity<Object> save(@Valid @RequestBody Cliente cliente) {
+        cliente.setClave(Hash.sha1(cliente.getClave()));
+        return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto),
+                HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public Cliente update(@RequestBody Cliente cliente, @PathVariable("id") String id) {
-        cliente.setId(id);
-        return clienteService.save(cliente);
+    public ResponseEntity<Object> update(@Valid @RequestBody Cliente cliente, @PathVariable("id") String id) {
+        cliente.setIdCliente(id);
+        cliente.setClave(Hash.sha1(cliente.getClave()));
+        return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto), HttpStatus.OK);
     }
 
     @GetMapping("/list")
-    public List<Object> findAll() {
-        
+    public ResponseEntity<List<Object>> findAll() {
+
         List<Object> clienteDtoLista = new ArrayList<>();
         for (Cliente cliente : clienteService.findAll()) {
-            clienteDtoLista.add(convertEntity.convert(cliente,clienteDto));
+            clienteDtoLista.add(convertEntity.convert(cliente, clienteDto));
         }
-        return clienteDtoLista;
+
+        return new ResponseEntity<List<Object>>(clienteDtoLista, HttpStatus.OK);
     }
 
     @GetMapping("/list/{valor}")
-    public Cliente findByName(@PathVariable("valor") String valor) {
-        return clienteService.findByNombre(valor);
+    public ResponseEntity<Object> findByName(@PathVariable("valor") String valor) {
+        if (clienteService.findByNombre(valor) == null) {
+            Message message = new Message();
+            message.setStatus(404);
+            message.setMessage("usuario no encotrado con valor [" + valor + "]");
+            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(clienteService.findByNombre(valor), HttpStatus.OK);
     }
 
     @GetMapping("/list/partial/{valor}")

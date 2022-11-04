@@ -1,5 +1,6 @@
 package com.unab.banca.Dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,4 +11,6 @@ import lombok.NoArgsConstructor;
 public class ClienteDto {
     private String idCliente;
     private String nombreCliente;
+
+    
 }

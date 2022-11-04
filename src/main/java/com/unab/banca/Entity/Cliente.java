@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -25,18 +27,23 @@ public class Cliente {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID",strategy = "org.hibernate.id.UUIDGenerator")
     @Column(length = 50)
-    private String id;
+    private String idCliente;
 
+    @Size(min = 5,message = "El campo nombre debe tener mínimo 5 caracteres")
     @Column(length = 20)    
     private String nombre;
 
-    @Column(length = 30)
-    private String clave;
+    @NotEmpty(message = "El campo clave no debe ser vacio")
+    @Column(length = 50)
+    private String clave;    
+
+    public Cliente(String idCliente) {
+        this.idCliente = idCliente;
+    }
 
     @Override
     public String toString() {
-        return "Cliente [id=" + id + ", nombre=" + nombre + ", clave=" + clave + "]";
+        return "Cliente [id=" + idCliente + ", nombre=" + nombre + ", clave=" + clave + "]";
     }
-
     
 }

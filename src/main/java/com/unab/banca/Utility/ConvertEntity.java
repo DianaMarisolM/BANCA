@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 public class ConvertEntity {
     @Autowired
     ModelMapper modelMapper;
-    public Object convert(Object user,Object dto){
-        System.out.println(dto.getClass());
+    public Object convert(Object obj,Object objDto){
+        System.out.println(objDto.getClass());
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.LOOSE);
-                dto = modelMapper.map(user, dto.getClass());
-        return dto;
+                objDto = modelMapper.map(obj, objDto.getClass());
+        return objDto;
     }
 }
