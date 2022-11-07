@@ -14,10 +14,13 @@ import com.unab.banca.Entity.Cliente;
 public interface ClienteRepository extends CrudRepository<Cliente,String> {
     public Cliente findByNombre(String valor);
     public List<Cliente> findByNombreContaining(String valor);
-
     
     @Transactional(readOnly = true)
     @Query(value = "select * from clientes where nombre like %:nombre%",nativeQuery = true)
     public List<Cliente> findByNombrePartialManual(@Param("nombre") String nombre);
+
+    @Transactional(readOnly = true)
+    @Query(value = "select count(*) from clientes where nombre=:nombre and clave=:clave",nativeQuery = true)
+    public Integer logIn(@Param("nombre") String nombre,@Param("clave") String clave);
     
 }

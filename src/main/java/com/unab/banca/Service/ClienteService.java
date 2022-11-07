@@ -1,14 +1,14 @@
 package com.unab.banca.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.unab.banca.Dto.ClienteDto;
 import com.unab.banca.Entity.Cliente;
-import com.unab.banca.Entity.Message;
 import com.unab.banca.Repository.ClienteRepository;
 
 @Service
@@ -28,15 +28,20 @@ public class ClienteService {
         return (List<Cliente>) clienteRepository.findAll();
     }
 
-    public Message deleteById(String id) {
-        clienteRepository.deleteById(id);
-        return new Message(200, "Registro eliminado");
+    public String deleteById(String id) {
+        try {
+            clienteRepository.deleteById(id);
+            return "registro eliminado";
+        } catch (Exception e) {
+
+            return "Error  eliminando Registro";
+        }
+
     }
 
     public Cliente findByNombre(String valor) {
         return clienteRepository.findByNombre(valor);
     }
-
     public List<Cliente> findByNombreContaining(String valor) {
         return clienteRepository.findByNombreContaining(valor);
     }
@@ -45,8 +50,8 @@ public class ClienteService {
         return clienteRepository.findByNombrePartialManual(valor);
     }
 
-    public Optional<Cliente> findById(String valor) {
-        return clienteRepository.findById(valor);
+    public Integer logIn(String nombre, String clave){
+        return clienteRepository.logIn(nombre, clave);
     }
 
 }

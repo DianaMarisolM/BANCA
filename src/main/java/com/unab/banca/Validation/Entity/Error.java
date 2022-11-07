@@ -1,5 +1,4 @@
-package com.unab.banca.Dto;
-
+package com.unab.banca.Validation.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClienteDto {
-    private String idCliente;
-    private String nombreCliente;    
+public class Error {
+    private String type;
+    private String message;
 }
