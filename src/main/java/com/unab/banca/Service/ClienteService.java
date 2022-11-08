@@ -17,10 +17,10 @@ import com.unab.banca.Repository.ClienteRepository;
 import com.unab.banca.Repository.RoleRepository;
 import com.unab.banca.Utility.ConvertEntity;
 import com.unab.banca.Utility.Security.Hash;
+import com.unab.banca.Validation.Exception.InvalidDataException;
 import com.unab.banca.Validation.Exception.NoAuthorizeException;
 import com.unab.banca.Validation.Exception.NoFoundException;
 import com.unab.banca.Validation.Exception.UniqueException;
-import com.unab.banca.Validation.InvalidDataException;
 import com.unab.banca.Validation.Entity.Error;;
 
 @Service
@@ -80,7 +80,6 @@ public class ClienteService {
 
     public Cliente validarDatosCrearUsuario(String user, String key, String nombre, BindingResult result,
             CreateClienteDto createClienteDto) {
-        Set<Role> roles = new HashSet<>();
         if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
@@ -96,7 +95,6 @@ public class ClienteService {
             } else {
                 asignarRolesUsuario(createClienteDto);
             }
-
         }
         if (result.hasErrors()) {
             throw new InvalidDataException("Datos de entrada con errores", result);
@@ -113,7 +111,6 @@ public class ClienteService {
     public Cliente validarDatosModificarUsuario(String user, String key, BindingResult result,
             CreateClienteDto createClienteDto) {
         Set<Role> roles = new HashSet<>();
-        System.out.println(clienteRepository.logIn(user, Hash.sha1(key)) + "-----");
         if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));

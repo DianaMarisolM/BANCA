@@ -74,7 +74,6 @@ public class ClienteController {
         cliente = clienteService.validarDatosModificarUsuario(user, key, result, crearCliente);
         cliente.setIdCliente(id);
         cliente.setPassword(Hash.sha1(cliente.getPassword()));
-        System.out.println("Cliente---" + cliente);
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto), HttpStatus.OK);
     }
 
@@ -105,9 +104,17 @@ public class ClienteController {
     public ResponseEntity<Message> deleteById(@PathVariable("id") String id, @RequestHeader String user,
             @RequestHeader String key) {
         if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
-
-            throw new NoAuthorizeException("Acceso No Autorizado",
-                    new Error("Campo nombre", "Acceso no Autorizado "));
+            throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
+        } else {
+            int cantidad = 0;
+            for (Role role : clienteService.findByUserName(user).getRoles()) {
+                if (role.getNombre().toString().equals("ROLE_ADMIN"))
+                    cantidad++;
+            }
+            if (cantidad == 0) {
+                throw new NoAuthorizeException("Acceso No Autorizado",
+                        new Error("Tipo de usuario", "Acceso no Autorizado para tipo de usuario"));
+            }
         }
         return new ResponseEntity<>(new Message(200, clienteService.deleteById(id)), HttpStatus.OK);
     }
