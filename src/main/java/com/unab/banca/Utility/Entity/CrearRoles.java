@@ -1,5 +1,8 @@
 package com.unab.banca.Utility.Entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -7,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.unab.banca.Entity.Cliente;
 import com.unab.banca.Entity.ERole;
 import com.unab.banca.Entity.Role;
+import com.unab.banca.Repository.RoleRepository;
 import com.unab.banca.Service.ClienteService;
 import com.unab.banca.Service.RolService;
 import com.unab.banca.Utility.Security.Hash;
@@ -18,6 +22,8 @@ public class CrearRoles implements CommandLineRunner {
 
     @Autowired
     ClienteService clienteService;
+    @Autowired
+    RoleRepository roleRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -29,11 +35,15 @@ public class CrearRoles implements CommandLineRunner {
             rolService.save(rolUser);
         }
         if (clienteService.findAll().size() == 0) {
+            Role userRole = roleRepository.findByNombre(ERole.ROLE_ADMIN).get();
+            Set<Role> roles = new HashSet<>();
+            roles.add(userRole);
             Cliente cliente = new Cliente();
             cliente.setNombre("admin");
             cliente.setApellido("admin");
             cliente.setUserName("admin");
             cliente.setPassword(Hash.sha1("123456"));
+            cliente.setRoles(roles);
             clienteService.save(cliente);
         }
 
