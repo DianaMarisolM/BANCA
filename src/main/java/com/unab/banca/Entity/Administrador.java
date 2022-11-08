@@ -21,14 +21,14 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "clientes")
+@Table(name = "Administrador")
 @Entity
-public class Cliente {
+public class Administrador {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID",strategy = "org.hibernate.id.UUIDGenerator")
     @Column(length = 50)
-    private String idCliente;
+    private String idAdministrador;
 
     @Size(min = 4,message = "Debe tener mínimo 5 caracteres")
     @Column(length = 20)    
@@ -46,13 +46,13 @@ public class Cliente {
     @Column(length = 50)
     private String password;    
 
-    public Cliente(String idCliente) {
-        this.idCliente = idCliente;
+    public Administrador(String idAdministrador) {
+        this.idAdministrador = idAdministrador;
     }
 
     @Override
     public String toString() {
-        return "Cliente [id=" + idCliente + ", nombre=" + nombre + ", clave=" + password + "]";
+        return "Cliente [id=" + idAdministrador + ", nombre=" + nombre + ", clave=" + password + "]";
     }
     
 }

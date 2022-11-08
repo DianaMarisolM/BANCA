@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unab.banca.Dto.CuentaDto;
 import com.unab.banca.Entity.Cuenta;
-import com.unab.banca.Entity.Message;
 import com.unab.banca.Service.CuentaService;
 import com.unab.banca.Utility.ConvertEntity;
+import com.unab.banca.Utility.Entity.Message;
 
 @RestController
 @RequestMapping("/api/v1/cuenta")

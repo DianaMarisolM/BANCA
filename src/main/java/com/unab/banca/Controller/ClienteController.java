@@ -22,15 +22,14 @@ import org.springframework.validation.BindingResult;
 
 import com.unab.banca.Dto.ClienteDto;
 import com.unab.banca.Entity.Cliente;
-import com.unab.banca.Entity.Message;
+import com.unab.banca.Service.AdministradorService;
 import com.unab.banca.Service.ClienteService;
 import com.unab.banca.Utility.ConvertEntity;
+import com.unab.banca.Utility.Entity.Message;
 import com.unab.banca.Utility.Security.Hash;
 import com.unab.banca.Validation.Exception.InvalidDataException;
 import com.unab.banca.Validation.Exception.NoAuthorizeException;
 import com.unab.banca.Validation.Exception.UniqueException;
-
-import net.bytebuddy.asm.Advice.Return;
 
 import com.unab.banca.Validation.Entity.Error;
 
@@ -45,13 +44,16 @@ public class ClienteController {
     @Autowired
     ConvertEntity convertEntity;
 
+    @Autowired
+    AdministradorService administradorService;
+
     ClienteDto clienteDto = new ClienteDto();
 
     @PostMapping("/create")
     public ResponseEntity<Object> save(@RequestHeader String user, @RequestHeader String key,
             @Valid @RequestBody Cliente cliente, BindingResult result) {
         validarDatos(user, key, cliente.getNombre(), result);
-        cliente.setClave(Hash.sha1(cliente.getClave()));
+        cliente.setPassword(Hash.sha1(cliente.getPassword()));
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto),
                 HttpStatus.CREATED);
     }
@@ -62,7 +64,7 @@ public class ClienteController {
 
         validarDatos(user, key, result);
         cliente.setIdCliente(id);
-        cliente.setClave(Hash.sha1(cliente.getClave()));
+        cliente.setPassword(Hash.sha1(cliente.getPassword()));
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto), HttpStatus.OK);
     }
 
@@ -99,24 +101,24 @@ public class ClienteController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteById(@PathVariable("id") String id, @RequestHeader String user, @RequestHeader String key) {
-        if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
+    public ResponseEntity<Message> deleteById(@PathVariable("id") String id, @RequestHeader String user, @RequestHeader String key) {
+        if (administradorService.logIn(user, Hash.sha1(key)) == 0) {
 
-            return "Acceso no autorizado";
+            throw new NoAuthorizeException("Acceso No Autorizado",
+                    new Error("Campo nombre", "Acceso no Autorizado "));
         }
-        return clienteService.deleteById(id);
+        return new ResponseEntity<>(new Message( 200, clienteService.deleteById(id)),HttpStatus.OK);
     }
 
     private Boolean validarDatos(String user, String key, String nombre, BindingResult result) {
-
-        if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
-            throw new NoAuthorizeException("Acceso No Autorizado", 
-            new Error("Campo nombre", "Acceso no Autorizado "));
+        if (administradorService.logIn(user, Hash.sha1(key)) == 0) {
+            throw new NoAuthorizeException("Acceso No Autorizado",
+                    new Error("Campo nombre", "Acceso no Autorizado "));
         }
         if (result.hasErrors()) {
             throw new InvalidDataException("Datos de entrada con errores", result);
         }
-        if (clienteService.findByNombre(nombre) != null) {
+        if (clienteService.findByUserName(nombre) != null) {
 
             throw new UniqueException("Datos de entrada con errores",
                     new Error("Credenciales", "Ya existe un registro con el nombre " + nombre));
@@ -124,15 +126,14 @@ public class ClienteController {
         return true;
     }
 
-    private Boolean validarDatos(String user, String key,  BindingResult result) {
+    private Boolean validarDatos(String user, String key, BindingResult result) {
         if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
-            throw new NoAuthorizeException("Acceso No Autorizado", 
-            new Error("Campo nombre", "Acceso no Autorizado "));
+            throw new NoAuthorizeException("Acceso No Autorizado",
+                    new Error("Campo nombre", "Acceso no Autorizado "));
         }
         if (result.hasErrors()) {
             throw new InvalidDataException("Datos de entrada con errores", result);
         }
-
         return true;
     }
 

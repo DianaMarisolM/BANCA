@@ -11,4 +11,8 @@ import lombok.NoArgsConstructor;
 public class ClienteDto {
     private String idCliente;
     private String nombreCliente;    
+    private String apellidoCliente;    
+    private String userNameCliente;    
+
+
 }

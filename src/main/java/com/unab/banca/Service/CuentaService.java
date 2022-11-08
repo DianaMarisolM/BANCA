@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.unab.banca.Entity.Cuenta;
-import com.unab.banca.Entity.Message;
 import com.unab.banca.Repository.CuentaRespository;
+import com.unab.banca.Utility.Entity.Message;
 
 @Service
 public class CuentaService {

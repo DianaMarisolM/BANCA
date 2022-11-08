@@ -1,4 +1,4 @@
-package com.unab.banca.Entity;
+package com.unab.banca.Utility.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

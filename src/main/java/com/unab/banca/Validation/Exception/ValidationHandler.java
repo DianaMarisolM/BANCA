@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -29,6 +30,17 @@ public class ValidationHandler  {
 				new RuntimeException("no incluyo encabezados"),error);
 	}
 
+	
+	@ExceptionHandler
+	protected ResponseEntity<ErrorResponse> handleException(InvalidDataAccessResourceUsageException ex) {
+		List<Error>  error = new ArrayList<>();
+        error.add(new Error("Datos","No existen registros"));
+		return buildResponseEntity(HttpStatus.UNAUTHORIZED,
+				new RuntimeException("No existen registros"),error);
+	}
+
+	
+
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleException(UniqueException ex) {
 		List<Error>  error = new ArrayList<>();
@@ -36,12 +48,21 @@ public class ValidationHandler  {
 		return buildResponseEntity(HttpStatus.BAD_REQUEST,
 		ex,error);
 	}
+
+	@ExceptionHandler
+	protected ResponseEntity<ErrorResponse> handleException(NoFoundException ex) {
+		System.out.println("bien");
+		List<Error>  error = new ArrayList<>();
+		error.add(ex.getError());
+		return buildResponseEntity(HttpStatus.NOT_FOUND,
+		ex,error);
+	}
 	
 	@ExceptionHandler
 	protected ResponseEntity<ErrorResponse> handleException(NoAuthorizeException ex) {
 		List<Error>  error = new ArrayList<>();
 		error.add(ex.getError());
-		return buildResponseEntity(HttpStatus.BAD_REQUEST,
+		return buildResponseEntity(HttpStatus.UNAUTHORIZED,
 		ex,error);
 	}
 	@ExceptionHandler ResponseEntity<ErrorResponse> handleException(HttpMessageNotReadableException ex){
