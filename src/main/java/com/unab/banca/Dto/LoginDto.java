@@ -3,8 +3,6 @@ package com.unab.banca.Dto;
 
 import java.util.Set;
 
-import com.unab.banca.Entity.Role;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,12 +10,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClienteDto {
+public class LoginDto {
     private String idCliente;
     private String nombre;    
     private String apellido;    
     private String userName;   
-    private Set<Role> roles;
+    private String password;   
+    private Set<String> role; 
 
 
 }

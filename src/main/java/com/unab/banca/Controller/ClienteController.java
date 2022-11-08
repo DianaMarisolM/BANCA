@@ -1,7 +1,9 @@
 package com.unab.banca.Controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -21,8 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.validation.BindingResult;
 
 import com.unab.banca.Dto.ClienteDto;
+import com.unab.banca.Dto.LoginDto;
 import com.unab.banca.Entity.Cliente;
-import com.unab.banca.Service.AdministradorService;
+import com.unab.banca.Entity.ERole;
+import com.unab.banca.Entity.Role;
+import com.unab.banca.Repository.RoleRepository;
+import com.unab.banca.Service.RolService;
 import com.unab.banca.Service.ClienteService;
 import com.unab.banca.Utility.ConvertEntity;
 import com.unab.banca.Utility.Entity.Message;
@@ -45,15 +51,46 @@ public class ClienteController {
     ConvertEntity convertEntity;
 
     @Autowired
-    AdministradorService administradorService;
+    RolService administradorService;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     ClienteDto clienteDto = new ClienteDto();
 
+    LoginDto loginDto = new LoginDto();
+
     @PostMapping("/create")
     public ResponseEntity<Object> save(@RequestHeader String user, @RequestHeader String key,
-            @Valid @RequestBody Cliente cliente, BindingResult result) {
-        validarDatos(user, key, cliente.getNombre(), result);
-        cliente.setPassword(Hash.sha1(cliente.getPassword()));
+            @Valid @RequestBody LoginDto loginDto, BindingResult result) {
+        validarDatos(user, key, loginDto.getUserName(), result);
+        Cliente cliente = new Cliente();
+        loginDto.setPassword(Hash.sha1(loginDto.getPassword()));
+        Set<String> strRoles = loginDto.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        if(strRoles==null){
+            Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+            roles.add(userRole);
+        }else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByNombre(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(adminRole);
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(userRole);
+                }
+            });
+        }
+        cliente=(Cliente)convertEntity.convert(loginDto,cliente);
+        cliente.setRoles(roles);
+
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto),
                 HttpStatus.CREATED);
     }
@@ -69,8 +106,10 @@ public class ClienteController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<Object>> findAll() {
-
+    public ResponseEntity<List<Object>> findAll(@RequestHeader String user,@RequestHeader String key) {
+        if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
+            throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
+        }
         List<Object> clienteDtoLista = new ArrayList<>();
         for (Cliente cliente : clienteService.findAll()) {
             clienteDtoLista.add(convertEntity.convert(cliente, clienteDto));
@@ -79,30 +118,9 @@ public class ClienteController {
         return new ResponseEntity<List<Object>>(clienteDtoLista, HttpStatus.OK);
     }
 
-    @GetMapping("/list/{valor}")
-    public ResponseEntity<Object> findByName(@PathVariable("valor") String valor) {
-        if (clienteService.findByNombre(valor) == null) {
-            Message message = new Message();
-            message.setStatus(404);
-            message.setMessage("usuario no encotrado con valor [" + valor + "]");
-            return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(clienteService.findByNombre(valor), HttpStatus.OK);
-    }
-
-    @GetMapping("/list/partial/{valor}")
-    public List<Cliente> findByNombreContaining(@PathVariable("valor") String valor) {
-        return clienteService.findByNombreContaining(valor);
-    }
-
-    @GetMapping("/list/partialM/{valor}")
-    public List<Cliente> findByNombrePartialManual(@PathVariable("valor") String valor) {
-        return clienteService.findByNombrePartialManual(valor);
-    }
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Message> deleteById(@PathVariable("id") String id, @RequestHeader String user, @RequestHeader String key) {
-        if (administradorService.logIn(user, Hash.sha1(key)) == 0) {
+        if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
 
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
@@ -111,7 +129,7 @@ public class ClienteController {
     }
 
     private Boolean validarDatos(String user, String key, String nombre, BindingResult result) {
-        if (administradorService.logIn(user, Hash.sha1(key)) == 0) {
+        if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
         }

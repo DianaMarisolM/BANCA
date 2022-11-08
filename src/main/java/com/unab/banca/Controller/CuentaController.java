@@ -48,12 +48,10 @@ public class CuentaController {
 
     @GetMapping("/list")
     public List<Object> findAll() {
-
         List<Object> cuentaDtoLista = new ArrayList<>();
         for (Cuenta cuenta : cuentaService.findAll()) {
             cuentaDtoLista.add(convertEntity.convert(cuenta, cuentaDto));
         }
-
         return cuentaDtoLista;
     }
 
