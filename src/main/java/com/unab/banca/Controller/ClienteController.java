@@ -1,9 +1,7 @@
 package com.unab.banca.Controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -25,7 +23,6 @@ import org.springframework.validation.BindingResult;
 import com.unab.banca.Dto.ClienteDto;
 import com.unab.banca.Dto.CreateClienteDto;
 import com.unab.banca.Entity.Cliente;
-import com.unab.banca.Entity.ERole;
 import com.unab.banca.Entity.Role;
 import com.unab.banca.Repository.RoleRepository;
 import com.unab.banca.Service.RolService;
@@ -63,9 +60,9 @@ public class ClienteController {
     @PostMapping("/create")
     public ResponseEntity<Object> save(@RequestHeader String user, @RequestHeader String key,
             @Valid @RequestBody CreateClienteDto crearCliente, BindingResult result) {
-        clienteService.validarDatos(user, key, crearCliente.getUserName(), result, true);
-        crearCliente.setPassword(Hash.sha1(crearCliente.getPassword()));
-        asignarRolesUsuario(crearCliente);
+        cliente = clienteService.validarDatosCrearUsuario(user, key, crearCliente.getUserName(), result, crearCliente);
+        cliente.setPassword(Hash.sha1(crearCliente.getPassword()));
+        // asignarRolesUsuario(crearCliente);
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto),
                 HttpStatus.CREATED);
     }
@@ -74,9 +71,10 @@ public class ClienteController {
     public ResponseEntity<Object> update(@PathVariable("id") String id, @RequestHeader String user,
             @RequestHeader String key, @Valid @RequestBody CreateClienteDto crearCliente, BindingResult result) {
 
-        cliente= clienteService.validarDatos(user, key, result,crearCliente);       
+        cliente = clienteService.validarDatosModificarUsuario(user, key, result, crearCliente);
         cliente.setIdCliente(id);
         cliente.setPassword(Hash.sha1(cliente.getPassword()));
+        System.out.println("Cliente---" + cliente);
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto), HttpStatus.OK);
     }
 
@@ -84,7 +82,7 @@ public class ClienteController {
     public ResponseEntity<List<Object>> findAll(@RequestHeader String user, @RequestHeader String key) {
         if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
-        }else{
+        } else {
             int cantidad = 0;
             for (Role role : clienteService.findByUserName(user).getRoles()) {
                 if (role.getNombre().toString().equals("ROLE_ADMIN"))
@@ -92,7 +90,7 @@ public class ClienteController {
             }
             if (cantidad == 0) {
                 throw new NoAuthorizeException("Acceso No Autorizado",
-                    new Error("Tipo de usuario", "Acceso no Autorizado para tipo de usuario"));
+                        new Error("Tipo de usuario", "Acceso no Autorizado para tipo de usuario"));
             }
         }
         List<Object> clienteDtoLista = new ArrayList<>();
@@ -114,33 +112,4 @@ public class ClienteController {
         return new ResponseEntity<>(new Message(200, clienteService.deleteById(id)), HttpStatus.OK);
     }
 
-    private void asignarRolesUsuario(CreateClienteDto createCliente) {
-
-        Set<String> strRoles = createCliente.getRole();
-
-        Set<Role> roles = new HashSet<>();
-
-        if (strRoles == null) {
-
-            Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        Role adminRole = roleRepository.findByNombre(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
-                        roles.add(adminRole);
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
-                        roles.add(userRole);
-                }
-            });
-        }
-        cliente = (Cliente) convertEntity.convert(createCliente, cliente);
-        cliente.setRoles(roles);
-    }
 }

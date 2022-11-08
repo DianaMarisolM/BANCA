@@ -38,6 +38,8 @@ public class ClienteService {
     @Autowired
     ConvertEntity convertEntity;
 
+    Cliente cliente = new Cliente();
+
     public Cliente save(Cliente cliente) {
         return clienteRepository.save(cliente);
     }
@@ -76,21 +78,23 @@ public class ClienteService {
         return clienteRepository.logIn(nombre, clave);
     }
 
-    public Boolean validarDatos(String user, String key, String nombre, BindingResult result, boolean validarRol) {
+    public Cliente validarDatosCrearUsuario(String user, String key, String nombre, BindingResult result,
+            CreateClienteDto createClienteDto) {
+        Set<Role> roles = new HashSet<>();
         if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
         } else {
             int cantidad = 0;
-            if (validarRol == true) {
-                for (Role role : clienteRepository.findByUserName(user).getRoles()) {
-                    if (role.getNombre().toString().equals("ROLE_ADMIN"))
-                        cantidad++;
-                }
-                if (cantidad == 0) {
-                    throw new NoAuthorizeException("Acceso No Autorizado",
-                            new Error("Rol", "No tiene permiso de administrador para crear usuarios "));
-                }
+            for (Role role : clienteRepository.findByUserName(user).getRoles()) {
+                if (role.getNombre().toString().equals("ROLE_ADMIN"))
+                    cantidad++;
+            }
+            if (cantidad == 0) {
+                throw new NoAuthorizeException("Acceso No Autorizado",
+                        new Error("Rol", "No tiene permiso de administrador para crear usuarios "));
+            } else {
+                asignarRolesUsuario(createClienteDto);
             }
 
         }
@@ -102,52 +106,63 @@ public class ClienteService {
             throw new UniqueException("Datos de entrada con errores",
                     new Error("Credenciales", "Ya existe un registro con el nombre " + nombre));
         }
-        return true;
+        cliente.setIdCliente(null);
+        return cliente;
     }
 
-    public Cliente validarDatos(String user, String key, BindingResult result,
+    public Cliente validarDatosModificarUsuario(String user, String key, BindingResult result,
             CreateClienteDto createClienteDto) {
-        Cliente cliente = new Cliente();
-        Set<String> strRoles = createClienteDto.getRole();
         Set<Role> roles = new HashSet<>();
+        System.out.println(clienteRepository.logIn(user, Hash.sha1(key)) + "-----");
         if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
         } else {
             int cantidad = 0;
-
             for (Role role : clienteRepository.findByUserName(user).getRoles()) {
                 if (role.getNombre().toString().equals("ROLE_ADMIN"))
                     cantidad++;
             }
             if (cantidad == 0) {
-                
                 Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
                         .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
                 roles.add(userRole);
-            }else{
-                
-                strRoles.forEach(role -> {
-                    switch (role) {
-                        case "admin":
-                            Role adminRole = roleRepository.findByNombre(ERole.ROLE_ADMIN)
-                                    .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
-                            roles.add(adminRole);
-                            break;
-                        default:
-                            Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
-                                    .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
-                            roles.add(userRole);
-                    }
-                });
-            }
+            } else {
+                asignarRolesUsuario(createClienteDto);
 
+            }
         }
+
         if (result.hasErrors()) {
             throw new InvalidDataException("Datos de entrada con errores", result);
         }
-        cliente = (Cliente) convertEntity.convert(createClienteDto, cliente);        
-        cliente.setRoles(roles);
+
         return cliente;
+    }
+
+    public void asignarRolesUsuario(CreateClienteDto createCliente) {
+        Set<String> strRoles = createCliente.getRole();
+        Set<Role> roles = new HashSet<>();
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByNombre(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(adminRole);
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(userRole);
+                }
+            });
+        }
+        cliente = (Cliente) convertEntity.convert(createCliente, cliente);
+        cliente.setRoles(roles);
     }
 }
