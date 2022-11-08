@@ -53,7 +53,8 @@ public class Cliente {
 
     @Override
     public String toString() {
-        return "Cliente [id=" + idCliente + ", nombre=" + nombre + ", clave=" + password + "]";
+        return "Cliente [idCliente=" + idCliente + ", nombre=" + nombre + ", apellido=" + apellido + ", userName="
+                + userName + ", password=" + password + ", roles=" + roles + "]";
     }
 
 }

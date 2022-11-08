@@ -74,11 +74,9 @@ public class ClienteController {
     public ResponseEntity<Object> update(@PathVariable("id") String id, @RequestHeader String user,
             @RequestHeader String key, @Valid @RequestBody CreateClienteDto crearCliente, BindingResult result) {
 
-        clienteService.validarDatos(user, key, result);
-        asignarRolesUsuario(crearCliente);
+        cliente= clienteService.validarDatos(user, key, result,crearCliente);       
         cliente.setIdCliente(id);
         cliente.setPassword(Hash.sha1(cliente.getPassword()));
-
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto), HttpStatus.OK);
     }
 
@@ -114,7 +112,8 @@ public class ClienteController {
 
         if (strRoles == null) {
 
-            Role userRole = new Role(ERole.ROLE_ADMIN);
+            Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
@@ -131,7 +130,6 @@ public class ClienteController {
                 }
             });
         }
-        System.out.println(roles + "--------------roles");
         cliente = (Cliente) convertEntity.convert(createCliente, cliente);
         cliente.setRoles(roles);
     }
