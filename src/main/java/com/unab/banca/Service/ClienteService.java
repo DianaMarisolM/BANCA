@@ -120,7 +120,6 @@ public class ClienteService {
                 if (role.getNombre().toString().equals("ROLE_ADMIN"))
                     cantidad++;
             }
-            System.out.println(cantidad+"-----------cantidad");
             if (cantidad == 0) {
                 
                 Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)

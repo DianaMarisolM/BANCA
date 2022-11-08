@@ -84,6 +84,16 @@ public class ClienteController {
     public ResponseEntity<List<Object>> findAll(@RequestHeader String user, @RequestHeader String key) {
         if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
+        }else{
+            int cantidad = 0;
+            for (Role role : clienteService.findByUserName(user).getRoles()) {
+                if (role.getNombre().toString().equals("ROLE_ADMIN"))
+                    cantidad++;
+            }
+            if (cantidad == 0) {
+                throw new NoAuthorizeException("Acceso No Autorizado",
+                    new Error("Tipo de usuario", "Acceso no Autorizado para tipo de usuario"));
+            }
         }
         List<Object> clienteDtoLista = new ArrayList<>();
         for (Cliente cliente : clienteService.findAll()) {
