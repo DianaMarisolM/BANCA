@@ -11,13 +11,17 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "cuentas")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cuenta  {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -36,5 +40,10 @@ public class Cuenta  {
         return "Cuenta [id_cuenta=" + id + ", fecha_apertura=" + fechaApertura + ", saldo_cuenta="
                 + saldoCuenta + ", cliente=" + cliente + "]";
     }
+    public Cuenta(String id) {
+        this.id = id;
+    }
+
+    
 
 }

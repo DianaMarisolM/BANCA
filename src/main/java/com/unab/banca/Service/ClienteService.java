@@ -22,7 +22,7 @@ import com.unab.banca.Validation.Exception.InvalidDataException;
 import com.unab.banca.Validation.Exception.NoAuthorizeException;
 import com.unab.banca.Validation.Exception.NoFoundException;
 import com.unab.banca.Validation.Exception.UniqueException;
-import com.unab.banca.Validation.Entity.Error;;
+import com.unab.banca.Validation.Entity.Error;
 
 @Service
 public class ClienteService {
@@ -181,7 +181,7 @@ public class ClienteService {
 
     }
 
-    public void validarListarCuenta(String user, String key,String id) {
+    public void validarUsuario(String user, String key,String id) {
         if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
         } else {

@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 
 import com.unab.banca.Entity.Cliente;
 import com.unab.banca.Entity.Cuenta;
-import com.unab.banca.Repository.CuentaRespository;
+import com.unab.banca.Repository.CuentaRepository;
 import com.unab.banca.Utility.Security.Hash;
 import com.unab.banca.Validation.Exception.InvalidDataException;
 import com.unab.banca.Validation.Exception.NoAuthorizeException;
@@ -18,7 +18,7 @@ import com.unab.banca.Validation.Entity.Error;;
 @Service
 public class CuentaService {
     @Autowired
-    CuentaRespository cuentaRespository;
+    CuentaRepository cuentaRespository;
 
     @Autowired
     ClienteService clienteService;

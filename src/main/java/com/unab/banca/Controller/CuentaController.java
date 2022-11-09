@@ -71,7 +71,7 @@ public class CuentaController {
 
     @GetMapping("/list/{id}")
     public ResponseEntity<List<Object>> findByCliente(@RequestHeader String user, @RequestHeader String key,@PathVariable("id") String id) {
-        clienteService.validarListarCuenta(user, key,id);
+        clienteService.validarUsuario(user, key,id);
         Cliente cliente = new Cliente(id);
         List<Object> cuentaDtoLista = new ArrayList<>();
         for (Cuenta cuenta : cuentaService.findByIdCliente(cliente)) {
