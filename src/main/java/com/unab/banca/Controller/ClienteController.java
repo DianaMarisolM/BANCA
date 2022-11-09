@@ -23,16 +23,15 @@ import org.springframework.validation.BindingResult;
 import com.unab.banca.Dto.ClienteDto;
 import com.unab.banca.Dto.CreateClienteDto;
 import com.unab.banca.Entity.Cliente;
-import com.unab.banca.Entity.Role;
+
 import com.unab.banca.Repository.RoleRepository;
 import com.unab.banca.Service.RolService;
 import com.unab.banca.Service.ClienteService;
 import com.unab.banca.Utility.ConvertEntity;
 import com.unab.banca.Utility.Entity.Message;
-import com.unab.banca.Utility.Security.Hash;
-import com.unab.banca.Validation.Exception.NoAuthorizeException;
-
 import com.unab.banca.Validation.Entity.Error;
+import com.unab.banca.Utility.Security.Hash;
+import com.unab.banca.Validation.Exception.NoFoundException;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -55,14 +54,11 @@ public class ClienteController {
 
     Cliente cliente = new Cliente();
 
-    // CreateClienteDto createClienteDto = new CreateClienteDto();
-
     @PostMapping("/create")
     public ResponseEntity<Object> save(@RequestHeader String user, @RequestHeader String key,
             @Valid @RequestBody CreateClienteDto crearCliente, BindingResult result) {
-        cliente = clienteService.validarDatosCrearUsuario(user, key, crearCliente.getUserName(), result, crearCliente);
+        cliente = clienteService.validarDatosCrearCliente(user, key, crearCliente.getUserName(), result, crearCliente);
         cliente.setPassword(Hash.sha1(crearCliente.getPassword()));
-        // asignarRolesUsuario(crearCliente);
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto),
                 HttpStatus.CREATED);
     }
@@ -71,7 +67,7 @@ public class ClienteController {
     public ResponseEntity<Object> update(@PathVariable("id") String id, @RequestHeader String user,
             @RequestHeader String key, @Valid @RequestBody CreateClienteDto crearCliente, BindingResult result) {
 
-        cliente = clienteService.validarDatosModificarUsuario(user, key, result, crearCliente);
+        cliente = clienteService.validarDatosModificarCliente(user, key, result, crearCliente);
         cliente.setIdCliente(id);
         cliente.setPassword(Hash.sha1(cliente.getPassword()));
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto), HttpStatus.OK);
@@ -86,6 +82,28 @@ public class ClienteController {
         }
 
         return new ResponseEntity<List<Object>>(clienteDtoLista, HttpStatus.OK);
+    }
+
+    @GetMapping("/list/nombre/{nombre}")
+    public ResponseEntity<List<Object>> findByName(@RequestHeader String user, @RequestHeader String key,
+            @PathVariable("nombre") String nombre) {
+        clienteService.validarUsuarioAdmin(user, key);
+        List<Object> clienteDtoLista = new ArrayList<>();
+        for (Cliente cliente : clienteService.findByNombreContaining(nombre)) {
+            clienteDtoLista.add(convertEntity.convert(cliente, clienteDto));
+        }
+
+        return new ResponseEntity<List<Object>>(clienteDtoLista, HttpStatus.OK);
+    }
+
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Object> findById(@RequestHeader String user, @RequestHeader String key,
+            @PathVariable("id") String id) {
+        clienteService.validarUsuarioAdmin(user, key);
+        return new ResponseEntity<Object>(convertEntity.convert(
+                clienteService.findById(id).orElseThrow(() -> new NoFoundException("Registro no existente",
+                        new Error("Eliminar", "No existe un registro con el id " + id))),
+                clienteDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

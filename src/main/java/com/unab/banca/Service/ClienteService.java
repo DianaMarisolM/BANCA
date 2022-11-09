@@ -2,6 +2,7 @@ package com.unab.banca.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.modelmapper.ModelMapper;
@@ -70,15 +71,15 @@ public class ClienteService {
         return clienteRepository.findByNombreContaining(valor);
     }
 
-    public List<Cliente> findByNombrePartialManual(String valor) {
-        return clienteRepository.findByNombrePartialManual(valor);
+    public Optional<Cliente> findById(String valor) {
+        return clienteRepository.findById(valor);
     }
 
     public Integer logIn(String nombre, String clave) {
         return clienteRepository.logIn(nombre, clave);
     }
 
-    public Cliente validarDatosCrearUsuario(String user, String key, String nombre, BindingResult result,
+    public Cliente validarDatosCrearCliente(String user, String key, String nombre, BindingResult result,
             CreateClienteDto createClienteDto) {
         if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado",
@@ -108,7 +109,7 @@ public class ClienteService {
         return cliente;
     }
 
-    public Cliente validarDatosModificarUsuario(String user, String key, BindingResult result,
+    public Cliente validarDatosModificarCliente(String user, String key, BindingResult result,
             CreateClienteDto createClienteDto) {
         Set<Role> roles = new HashSet<>();
         if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
@@ -175,6 +176,27 @@ public class ClienteService {
             if (cantidad == 0) {
                 throw new NoAuthorizeException("Acceso No Autorizado",
                         new Error("Tipo de usuario", "Acceso no Autorizado para tipo de usuario"));
+            }
+        }
+
+    }
+
+    public void validarListarCuenta(String user, String key,String id) {
+        if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
+            throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
+        } else {
+            int cantidad = 0;
+            for (Role role : clienteRepository.findByUserName(user).getRoles()) {
+                if (role.getNombre().toString().equals("ROLE_ADMIN"))
+                    cantidad++;
+            }
+            if (cantidad == 0) {
+
+                if(!clienteRepository.findByUserName(user).getIdCliente().equals(id)){
+                    throw new NoAuthorizeException("Acceso No Autorizado",
+                    new Error("Tipo de usuario", "Acceso no Autorizado para tipo de usuario"));
+                }
+                
             }
         }
 
