@@ -7,8 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.unab.banca.Entity.Cuenta;
 import com.unab.banca.Entity.Transaccion;
-
-import com.unab.banca.Repository.CuentaRepository;
 import com.unab.banca.Repository.TransaccionRepository;
 @Service
 public class TransaccionService {
@@ -42,7 +40,6 @@ public class TransaccionService {
 
     @Transactional(readOnly=false)
     public void createTransation(String idcta, Double valor_transaccion, String tipo) {
-        System.out.println(idcta+"-----------------");
         transaccionRepository.createTransation(idcta, valor_transaccion, tipo);
     }
 

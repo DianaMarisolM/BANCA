@@ -31,8 +31,12 @@ public class CrearRoles implements CommandLineRunner {
         if (rolService.findAll().size() == 0) {
             Role rolAdmin = new Role(ERole.ROLE_ADMIN);
             Role rolUser = new Role(ERole.ROLE_USER);
+            Role rolModerator = new Role(ERole.ROLE_MODERATOR);
+            Role rolCahser = new Role(ERole.ROLE_CASHER);
             rolService.save(rolAdmin);
             rolService.save(rolUser);
+            rolService.save(rolModerator);
+            rolService.save(rolCahser);
         }
         if (clienteService.findAll().size() == 0) {
             Role userRole = roleRepository.findByNombre(ERole.ROLE_ADMIN).get();

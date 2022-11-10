@@ -153,6 +153,16 @@ public class ClienteService {
                                 .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
                         roles.add(adminRole);
                         break;
+                    case "mod":
+                        Role modRole = roleRepository.findByNombre(ERole.ROLE_MODERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(modRole);
+                        break;
+                    case "cash":
+                        Role cashRole = roleRepository.findByNombre(ERole.ROLE_CASHER)
+                                .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
+                        roles.add(cashRole);
+                        break;
                     default:
                         Role userRole = roleRepository.findByNombre(ERole.ROLE_USER)
                                 .orElseThrow(() -> new RuntimeException("Error: Rol no encontrado"));
@@ -181,7 +191,7 @@ public class ClienteService {
 
     }
 
-    public void validarUsuario(String user, String key,String id) {
+    public void validarUsuario(String user, String key, String id) {
         if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
         } else {
@@ -192,11 +202,11 @@ public class ClienteService {
             }
             if (cantidad == 0) {
 
-                if(!clienteRepository.findByUserName(user).getIdCliente().equals(id)){
+                if (!clienteRepository.findByUserName(user).getIdCliente().equals(id)) {
                     throw new NoAuthorizeException("Acceso No Autorizado",
-                    new Error("Tipo de usuario", "Acceso no Autorizado para tipo de usuario"));
+                            new Error("Tipo de usuario", "Acceso no Autorizado para tipo de usuario"));
                 }
-                
+
             }
         }
 

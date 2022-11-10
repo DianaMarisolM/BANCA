@@ -1,29 +1,24 @@
 package com.unab.banca.Controller;
 
-import com.unab.banca.Entity.Cliente;
 import com.unab.banca.Entity.Transaccion;
-import com.unab.banca.Repository.ClienteRepository;
 import com.unab.banca.Repository.CuentaRepository;
 import com.unab.banca.Service.ClienteService;
 import com.unab.banca.Service.TransaccionService;
+import com.unab.banca.Utility.Entity.Message;
 import com.unab.banca.Utility.Security.Hash;
 import com.unab.banca.Validation.Exception.NoAuthorizeException;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.unab.banca.Validation.Entity.Error;
 
@@ -39,15 +34,8 @@ public class TransaccionController {
     @Autowired
     TransaccionService transaccionService;
 
-    @PostMapping(value = "/api/v1/transaccion")
-    @ResponseBody
-    public ResponseEntity<Transaccion> agregar(@RequestBody Transaccion transaccion) {
-        Transaccion obj = transaccionService.save(transaccion);
-        return new ResponseEntity<>(obj, HttpStatus.OK);
-    }
-
     @PostMapping(value = "/create")
-    public String crear_transaccion(@RequestBody Transaccion transaccion, @RequestHeader String key,
+    public ResponseEntity<Message> createTransaccion(@RequestBody Transaccion transaccion, @RequestHeader String key,
             @RequestHeader String user) {
         if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
             throw new NoAuthorizeException("Acceso No Autorizado",
@@ -56,13 +44,20 @@ public class TransaccionController {
         transaccionService.createTransation(transaccion.getCuenta().getId() + "", transaccion.getValorTransaccion(),
                 transaccion.getTipoTransaccion());
 
-        if(transaccion.getTipoTransaccion().equals("D")){
-            cuentaRepository.deposito(transaccion.getCuenta().getId() ,transaccion.getValorTransaccion());
-        }else{
-            cuentaRepository.retiro(transaccion.getCuenta().getId() ,transaccion.getValorTransaccion());
+        if (transaccion.getTipoTransaccion().equals("D")) {
+            cuentaRepository.deposito(transaccion.getCuenta().getId(), transaccion.getValorTransaccion());
+        } else {
+            Double saldo = cuentaRepository.findById(transaccion.getCuenta().getId()).get().getSaldoCuenta();
+
+            if (saldo > transaccion.getValorTransaccion()) {
+                cuentaRepository.retiro(transaccion.getCuenta().getId(), transaccion.getValorTransaccion());
+            } else {
+                return new ResponseEntity<>(new Message(401, "El valor a retirar supera el saldo de la cuenta"),
+                        HttpStatus.BAD_REQUEST);
+            }
         }
 
-        return "Registro Insertado";
+        return new ResponseEntity<>(new Message(201, "Tranccion Realizada"), HttpStatus.OK);
 
     }
 
@@ -90,10 +85,10 @@ public class TransaccionController {
     // return new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);
     // return new ResponseEntity<>(obj, HttpStatus.OK);
     // }
-    // @GetMapping("/list")
-    // public List<Transaccion> consultarTodo(){
-    // return transaccionService.findByAll();
-    // }
+    @GetMapping("/list")
+    public List<Transaccion> consultarTodo() {
+        return transaccionService.findByAll();
+    }
     // @GetMapping("/list/{id}")
     // public Transaccion consultaPorId(@PathVariable Integer id){
     // return transaccionService.findById(id);
