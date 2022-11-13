@@ -81,7 +81,7 @@ public class ClienteService {
 
     public Cliente validarDatosCrearCliente(String user, String key, String nombre, BindingResult result,
             CreateClienteDto createClienteDto) {
-        if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
+        if (!Hash.sha1(clienteRepository.findByUserName(user).getPassword()+user).equals(key)) {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
         } else {
@@ -112,7 +112,7 @@ public class ClienteService {
     public Cliente validarDatosModificarCliente(String user, String key, BindingResult result,
             CreateClienteDto createClienteDto) {
         Set<Role> roles = new HashSet<>();
-        if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
+        if (!Hash.sha1(clienteRepository.findByUserName(user).getPassword()+user).equals(key)) {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
         } else {
@@ -175,7 +175,7 @@ public class ClienteService {
     }
 
     public void validarUsuarioAdmin(String user, String key) {
-        if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
+        if (!Hash.sha1(clienteRepository.findByUserName(user).getPassword()+user).equals(key)) {
             throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
         } else {
             int cantidad = 0;
@@ -192,7 +192,7 @@ public class ClienteService {
     }
 
     public void validarUsuario(String user, String key, String id) {
-        if (clienteRepository.logIn(user, Hash.sha1(key)) == 0) {
+        if (Hash.sha1(clienteRepository.findByUserName(user).getPassword()+user).equals(key)) {
             throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
         } else {
             int cantidad = 0;

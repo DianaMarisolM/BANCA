@@ -22,6 +22,7 @@ import org.springframework.validation.BindingResult;
 
 import com.unab.banca.Dto.ClienteDto;
 import com.unab.banca.Dto.CreateClienteDto;
+import com.unab.banca.Dto.LoginDto;
 import com.unab.banca.Entity.Cliente;
 
 import com.unab.banca.Repository.RoleRepository;
@@ -31,6 +32,7 @@ import com.unab.banca.Utility.ConvertEntity;
 import com.unab.banca.Utility.Entity.Message;
 import com.unab.banca.Validation.Entity.Error;
 import com.unab.banca.Utility.Security.Hash;
+import com.unab.banca.Validation.Exception.NoAuthorizeException;
 import com.unab.banca.Validation.Exception.NoFoundException;
 
 @CrossOrigin(origins = "*")
@@ -61,6 +63,20 @@ public class ClienteController {
         cliente.setPassword(Hash.sha1(crearCliente.getPassword()));
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto),
                 HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginDto> Login(@RequestHeader String user, @RequestHeader String key) {
+        if (clienteService.logIn(user, key) == 1) {
+            cliente = clienteService.findByUserName(user);
+            cliente.setPassword(Hash.sha1(key+user));
+            return new ResponseEntity<>(
+                    (LoginDto) convertEntity.convert(cliente, new LoginDto()),
+                    HttpStatus.OK);
+        } else {
+            throw new NoAuthorizeException("Acceso no Autorizado", new Error("Acceso", "Error de credenciales"));
+        }
+
     }
 
     @PutMapping("/update/{id}")
