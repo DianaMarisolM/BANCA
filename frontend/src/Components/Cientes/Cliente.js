@@ -79,7 +79,7 @@ const Cliente = () => {
                                 </tr>
                             </thead>
                             <tbody>
-
+                                
                                 {Cliente.map((cliente) => (
                                     <tr key={cliente.idCliente}>
                                         <td> {cliente.nombre} </td>
