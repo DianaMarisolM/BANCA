@@ -2,6 +2,7 @@ package com.unab.banca.Dto;
 
 import java.util.Set;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -17,7 +18,9 @@ public class CreateClienteDto {
     private String nombre;
     @Size(min = 5, message = "Debe tener mínimo 5 caracteres")
     private String apellido;
+    @Size(min = 5, message = "Debe tener mínimo 5 caracteres")
     private String userName;
+    @NotBlank(message = "No puede ser vacio")
     private String password;
     private Set<String> role;
 

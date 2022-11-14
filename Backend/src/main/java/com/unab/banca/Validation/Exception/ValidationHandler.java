@@ -119,7 +119,7 @@ public class ValidationHandler {
 			err.setMessage(error.getDefaultMessage());
 			errores.add(err);
 		});
-		return buildResponseEntity(HttpStatus.BAD_REQUEST, ex, errores);
+		return buildResponseEntity(HttpStatus.PARTIAL_CONTENT, ex, errores);
 
 	}
 

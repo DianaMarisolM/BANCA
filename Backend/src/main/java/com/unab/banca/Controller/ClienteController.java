@@ -59,6 +59,7 @@ public class ClienteController {
     @PostMapping("/create")
     public ResponseEntity<Object> save(@RequestHeader String user, @RequestHeader String key,
             @Valid @RequestBody CreateClienteDto crearCliente, BindingResult result) {
+                System.out.println(crearCliente);
         cliente = clienteService.validarDatosCrearCliente(user, key, crearCliente.getUserName(), result, crearCliente);
         cliente.setPassword(Hash.sha1(crearCliente.getPassword()));
         return new ResponseEntity<>(convertEntity.convert(clienteService.save(cliente), clienteDto),
@@ -67,9 +68,9 @@ public class ClienteController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginDto> Login(@RequestHeader String user, @RequestHeader String key) {
-        if (clienteService.logIn(user, key) == 1) {
+        if (clienteService.logIn(user, Hash.sha1(key)) == 1) {
             cliente = clienteService.findByUserName(user);
-            cliente.setPassword(Hash.sha1(key+user));
+            cliente.setPassword(Hash.sha1(cliente.getPassword()+user));
             return new ResponseEntity<>(
                     (LoginDto) convertEntity.convert(cliente, new LoginDto()),
                     HttpStatus.OK);
