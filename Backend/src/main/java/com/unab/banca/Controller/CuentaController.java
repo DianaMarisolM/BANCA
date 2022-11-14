@@ -45,10 +45,11 @@ public class CuentaController {
     CuentaDto cuentaDto = new CuentaDto();
 
     @PostMapping("/create")
-    public Object save(@Valid @RequestBody Cuenta cuenta, BindingResult result, @RequestHeader String user,
+    public ResponseEntity<Object> save(@Valid @RequestBody Cuenta cuenta, BindingResult result, @RequestHeader String user,
             @RequestHeader String key) {
+                System.out.println(cuenta+"---");
         cuentaService.validarDatosCrearCuenta(user, key, result);
-        return (CuentaDto) convertEntity.convert(cuentaService.save(cuenta), cuentaDto);
+        return new ResponseEntity<>((CuentaDto) convertEntity.convert(cuentaService.save(cuenta), cuentaDto),HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
@@ -69,7 +70,7 @@ public class CuentaController {
         return new ResponseEntity<List<Object>>(cuentaDtoLista, HttpStatus.OK);
     }
 
-    @GetMapping("/list/{id}")
+    @GetMapping("/list/cliente/{id}")
     public ResponseEntity<List<Object>> findByCliente(@RequestHeader String user, @RequestHeader String key,@PathVariable("id") String id) {
         clienteService.validarUsuario(user, key,id);
         Cliente cliente = new Cliente(id);
@@ -78,6 +79,12 @@ public class CuentaController {
             cuentaDtoLista.add(convertEntity.convert(cuenta, cuentaDto));
         }
         return new ResponseEntity<List<Object>>(cuentaDtoLista, HttpStatus.OK);
+    }
+
+    @GetMapping("/list/{id}")
+    public ResponseEntity<Object> findById(@RequestHeader String user, @RequestHeader String key,@PathVariable("id") String id) {
+        clienteService.validarUsuario(user, key,id);
+        return new ResponseEntity<Object>((CuentaDto) convertEntity.convert(cuentaService.findById(id), cuentaDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

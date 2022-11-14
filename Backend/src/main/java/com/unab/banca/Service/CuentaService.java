@@ -38,6 +38,10 @@ public class CuentaService {
         return  cuentaRespository.findByCliente(cliente);
     }
 
+    public Cuenta findById(String id) {
+        return  cuentaRespository.findById(id).get();
+    }
+
     public String deleteById(String id) {
         cuentaRespository.findById(id).orElseThrow(() -> new NoFoundException("Registro no existente",
                 new Error("Eliminar", "No existe un registro con el id " + id)));
@@ -47,7 +51,7 @@ public class CuentaService {
 
     public void validarDatosCrearCuenta(String user, String key, BindingResult result) {
         clienteService.validarUsuarioAdmin(user, key);
-        if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
+        if (!Hash.sha1(clienteService.findByUserName(user).getPassword()+user).equals(key)) {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
         } 

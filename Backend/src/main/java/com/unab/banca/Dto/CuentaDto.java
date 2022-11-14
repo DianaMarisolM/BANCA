@@ -10,4 +10,6 @@ public class CuentaDto {
     private Date fechaCreaccion;
     private Double saldo;
     private String idCliente;    
+    private String nombre;
+    private String apellido;
 }

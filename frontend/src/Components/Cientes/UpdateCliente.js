@@ -150,7 +150,7 @@ const UpdateCliente = () => {
                             type="checkbox"
                             value="cash"
                         />
-                        <label className="form-check-label">cahs</label>
+                        <label className="form-check-label">cash</label>
                         {"  "}
                     </div>
                     <button type="submit" className="btn btn-primary">

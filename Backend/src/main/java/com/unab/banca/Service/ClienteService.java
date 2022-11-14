@@ -192,7 +192,7 @@ public class ClienteService {
     }
 
     public void validarUsuario(String user, String key, String id) {
-        if (Hash.sha1(clienteRepository.findByUserName(user).getPassword()+user).equals(key)) {
+        if (!Hash.sha1(clienteRepository.findByUserName(user).getPassword()+user).equals(key)) {
             throw new NoAuthorizeException("Acceso No Autorizado", new Error("Campo nombre", "Acceso no Autorizado "));
         } else {
             int cantidad = 0;
