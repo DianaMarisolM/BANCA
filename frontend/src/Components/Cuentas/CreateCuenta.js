@@ -6,8 +6,11 @@ const URI = "http://localhost:8081/api/v1/cuenta/create";
 const URIC = 'http://localhost:8081/api/v1/cliente/list'
 
 
-const CreateCuenta = (props) => {
-  let headers=props.headers
+const CreateCuenta = () => {
+  let headers = {
+      user: sessionStorage.getItem("user"),
+      key: sessionStorage.getItem("key")
+  };
   const [fecha, setFecha] = useState("");
   const [cliente, setCliente] = useState("");
   const [saldo, setSaldo] = useState("");

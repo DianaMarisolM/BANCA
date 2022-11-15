@@ -6,8 +6,11 @@ const URI = "http://localhost:8081/api/v1/cliente/create";
 
 
 
-const CreateCliente = (props) => {
-    let headers=props.headers
+const CreateCliente = () => {
+    let headers = {
+        user: sessionStorage.getItem("user"),
+        key: sessionStorage.getItem("key")
+    };
     const [nombre, setNombre] = useState("");
     const [apellido, setApellido] = useState("");
     const [userName, setUserName] = useState("");

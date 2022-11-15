@@ -20,6 +20,9 @@ function App() {
           <Route path="/createCuenta" element={<Menu ruta="createCuenta"  />} />
           <Route path="/editCuenta/:id" element={<Menu ruta="updateCuenta" />} />
 
+          <Route path="/transaccion/:id/:tipo" element={<Menu ruta="transaccion"  />} />
+          
+
           <Route path="/noFound" element={<NoFound />} />
 
           

@@ -37,7 +37,7 @@ public class TransaccionController {
     @PostMapping(value = "/create")
     public ResponseEntity<Message> createTransaccion(@RequestBody Transaccion transaccion, @RequestHeader String key,
             @RequestHeader String user) {
-        if (clienteService.logIn(user, Hash.sha1(key)) == 0) {
+        if (!Hash.sha1(clienteService.findByUserName(user).getPassword()+user).equals(key)) {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
         }
@@ -57,7 +57,7 @@ public class TransaccionController {
             }
         }
 
-        return new ResponseEntity<>(new Message(201, "Tranccion Realizada"), HttpStatus.OK);
+        return new ResponseEntity<>(new Message(201, "Tranccion Realizada"), HttpStatus.CREATED);
 
     }
 

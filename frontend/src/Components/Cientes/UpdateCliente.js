@@ -7,8 +7,11 @@ const URIU = 'http://localhost:8081/api/v1/cliente/update/'
 
 
 
-const UpdateCliente =(props) => {
-    let headers=props.headers
+const UpdateCliente =() => {
+    let headers = {
+        user: sessionStorage.getItem("user"),
+        key: sessionStorage.getItem("key")
+    };
     const [nombre, setNombre] = useState("");
     const [apellido, setApellido] = useState("");
     const [userName, setUserName] = useState("");

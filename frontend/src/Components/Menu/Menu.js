@@ -5,6 +5,7 @@ import UpdateCliente from "../Cientes/UpdateCliente";
 import Cuenta from "../Cuentas/Cuentas";
 import CreateCuenta from "../Cuentas/CreateCuenta";
 import UpdateCuentas from "../Cuentas/UpdateCuenta";
+import Deposito from "../transaccion/transaccion";
 const Menu = (props) => {
     let headers = {
         user: sessionStorage.getItem("user"),
@@ -68,6 +69,9 @@ const Menu = (props) => {
               }
               {
                 props.ruta==="updateCuenta"? <UpdateCuentas headers={headers}/>:""
+              }
+              {
+                props.ruta==="transaccion"? <Deposito headers={headers}/>:""
               }
             </div>
         </div>

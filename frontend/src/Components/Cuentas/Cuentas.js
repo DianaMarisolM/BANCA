@@ -7,7 +7,11 @@ const URID = 'http://localhost:8081/api/v1/cuenta/delete/'
 
 
 const Cuenta = (props) => {
-    let headers = props.headers
+
+    let headers = {
+        user: sessionStorage.getItem("user"),
+        key: sessionStorage.getItem("key")
+    };
     if (props.user == null) {
         URI = 'http://localhost:8081/api/v1/cuenta/list/cliente/' + sessionStorage.getItem("id")
     }
@@ -88,8 +92,8 @@ const Cuenta = (props) => {
                                         <td> {cuenta.apellido} </td>
                                         <td> {cuenta.saldo} </td>
                                         <td>
-                                            {props.user != null ? (<Link to={`/editCuenta/${cuenta.id}`} className='btn btn-outline-info'><i className="fas fa-edit"></i></Link>)  : (<Link to={`/consignar/${cuenta.id}`} className='btn btn-outline-success'><i className="fa-regular fa-money-bill-1 "> D</i></Link>) }&nbsp;
-                                            {props.user != null ? (<button onClick={() => deleteCuenta(cuenta.id)} className='btn btn-outline-danger'><i className="fas fa-trash-alt"></i></button>) : (<Link to={`/retirar/${cuenta.id}`} className='btn btn-outline-danger'><i className="fa-regular fa-money-bill-1 " > R</i></Link>)}&nbsp;
+                                            {props.user != null ? (<Link to={`/editCuenta/${cuenta.id}`} className='btn btn-outline-info'><i className="fas fa-edit"></i></Link>) : (<Link to={`/transaccion/${cuenta.id}/D`} className='btn btn-outline-success'><i className="fa-regular fa-money-bill-1 "> D</i></Link>)}&nbsp;
+                                            {props.user != null ? (<button onClick={() => deleteCuenta(cuenta.id)} className='btn btn-outline-danger'><i className="fas fa-trash-alt"></i></button>) : (<Link to={`/transaccion/${cuenta.id}/R`} className='btn btn-outline-danger'><i className="fa-regular fa-money-bill-1 " > R</i></Link>)}&nbsp;
                                             {props.user != null ? ("") : (<Link to={`/transacciones/${cuenta.id}`} className='btn btn-outline-warning'><i className="fa-regular fa-money-bill-1 " > T</i></Link>)}
                                         </td>
                                     </tr>
