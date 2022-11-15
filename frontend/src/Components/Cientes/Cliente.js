@@ -1,16 +1,12 @@
-import Menu from "../Menu/Menu";
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import swal from "sweetalert"
 const URI = 'http://localhost:8081/api/v1/cliente/list'
 const URID = 'http://localhost:8081/api/v1/cliente/delete/'
-let headers = {
-    user: sessionStorage.getItem("user"),
-    key: sessionStorage.getItem("key")
-};
-const Cliente = () => {
 
+const Cliente = (props) => {
+   let headers=props.headers
     const navigate = useNavigate();
     const [Cliente, setCliente] = useState([]);
     useEffect(() => {
@@ -63,7 +59,7 @@ const Cliente = () => {
     return (
         <div>
             {" "}
-            <Menu />
+    
             <div className='container'>
                 <div className='row'>
                     <div className='col'>

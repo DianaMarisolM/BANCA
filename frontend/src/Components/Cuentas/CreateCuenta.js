@@ -1,17 +1,13 @@
-import Menu from "../Menu/Menu";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 const URI = "http://localhost:8081/api/v1/cuenta/create";
 const URIC = 'http://localhost:8081/api/v1/cliente/list'
-let headers = {
-  user: sessionStorage.getItem("user"),
-  key: sessionStorage.getItem("key"),
-};
 
-const CreateCuenta = () => {
 
+const CreateCuenta = (props) => {
+  let headers=props.headers
   const [fecha, setFecha] = useState("");
   const [cliente, setCliente] = useState("");
   const [saldo, setSaldo] = useState("");
@@ -77,7 +73,6 @@ const CreateCuenta = () => {
 
   return (
     <div>
-      <Menu />
       <div className="container col-5">
         <h3>Create Cuenta</h3>
         <form onSubmit={Save}>

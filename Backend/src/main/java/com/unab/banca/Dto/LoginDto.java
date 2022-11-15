@@ -8,5 +8,6 @@ import lombok.Data;
 public class LoginDto {
     private String user;
     private String password;
+    private String id;
     private List<RoleDto> roles;
 }

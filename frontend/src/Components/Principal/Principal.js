@@ -5,7 +5,7 @@ const Principal = () => {
   return (
     <div>
 
-      <Menu/>
+      <Menu />
       
     </div>
   );

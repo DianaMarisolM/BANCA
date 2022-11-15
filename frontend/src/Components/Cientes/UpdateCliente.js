@@ -1,17 +1,14 @@
-import Menu from "../Menu/Menu";
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import {  useNavigate, useParams } from 'react-router-dom'
 import swal from "sweetalert"
 const URI = 'http://localhost:8081/api/v1/cliente/list/'
 const URIU = 'http://localhost:8081/api/v1/cliente/update/'
 
-let headers = {
-    user: sessionStorage.getItem("user"),
-    key: sessionStorage.getItem("key")
-};
 
-const UpdateCliente = () => {
+
+const UpdateCliente =(props) => {
+    let headers=props.headers
     const [nombre, setNombre] = useState("");
     const [apellido, setApellido] = useState("");
     const [userName, setUserName] = useState("");
@@ -78,7 +75,7 @@ const UpdateCliente = () => {
         
     }
     return (
-        <div><Menu />
+        <div>
             <div className="container col-5">
                 <h3>Update Cliente</h3>
                 <form onSubmit={Save}>

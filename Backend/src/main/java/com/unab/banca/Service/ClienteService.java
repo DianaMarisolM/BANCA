@@ -90,6 +90,7 @@ public class ClienteService {
                 if (role.getNombre().toString().equals("ROLE_ADMIN"))
                     cantidad++;
             }
+           
             if (cantidad == 0) {
                 throw new NoAuthorizeException("Acceso No Autorizado",
                         new Error("Rol", "No tiene permiso de administrador para crear usuarios "));
@@ -183,6 +184,7 @@ public class ClienteService {
                 if (role.getNombre().toString().equals("ROLE_ADMIN"))
                     cantidad++;
             }
+            System.out.println(user+"----");
             if (cantidad == 0) {
                 throw new NoAuthorizeException("Acceso No Autorizado",
                         new Error("Tipo de usuario", "Acceso no Autorizado para tipo de usuario"));

@@ -24,6 +24,7 @@ const Login = () => {
             });
             sessionStorage.setItem("key", Login.data.password)
             sessionStorage.setItem("user", Login.data.user)
+            sessionStorage.setItem("id", Login.data.id)
             sessionStorage.setItem("Rol", JSON.stringify(Login.data.roles))
             swal("Acceso Autorizado para usuario " + Login.data.user, "Presione el botón", "success")
             .then((value)=>{
@@ -73,8 +74,8 @@ const Login = () => {
                 <div className="alert alert-danger mostrar" role="alert" id="alerta">
                     A simple danger alert—check it out!
                 </div>{" "}
-                <button type="submit" className="btn btn-primary btn-block mb-4 ">
-                <i class="fa fa-sign-in" aria-hidden="true"></i> Sign In{" "}
+                <button type="submit" className="btn btn-outline-primary btn-block mb-4 ">
+                <i className="fa fa-sign-in" aria-hidden="true"></i> Sign In{" "}
                 </button>{" "}
             </form>{" "}
         </div>
