@@ -5,11 +5,8 @@ import swal from "sweetalert"
 const URI = 'http://localhost:8081/api/v1/cliente/list'
 const URID = 'http://localhost:8081/api/v1/cliente/delete/'
 
-const Cliente = () => {
-    let headers = {
-        user: sessionStorage.getItem("user"),
-        key: sessionStorage.getItem("key")
-    };
+const Cliente = (props) => {
+    let headers =props.headers
     const navigate = useNavigate();
     const [Cliente, setCliente] = useState([]);
     useEffect(() => {

@@ -2,18 +2,16 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import swal from "sweetalert"
-let URI = 'http://localhost:8081/api/v1/cuenta/list'
+let URI = ''
 const URID = 'http://localhost:8081/api/v1/cuenta/delete/'
 
 
 const Cuenta = (props) => {
-
-    let headers = {
-        user: sessionStorage.getItem("user"),
-        key: sessionStorage.getItem("key")
-    };
+    let headers =props.headers
     if (props.user == null) {
         URI = 'http://localhost:8081/api/v1/cuenta/list/cliente/' + sessionStorage.getItem("id")
+    }else{
+        URI = 'http://localhost:8081/api/v1/cuenta/list'
     }
     const navigate = useNavigate();
     const [Cuenta, setCuenta] = useState([]);

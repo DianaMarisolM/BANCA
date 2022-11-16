@@ -9,11 +9,8 @@ const URIC = 'http://localhost:8081/api/v1/cliente/list'
 
 
 
-const UpdateCuentas = () => {
-    let headers = {
-        user: sessionStorage.getItem("user"),
-        key: sessionStorage.getItem("key")
-    };
+const UpdateCuentas = (props) => {
+    let headers =props.headers
     const [fecha, setFecha] = useState("");
     const [cliente, setCliente] = useState("");
     const [saldo, setSaldo] = useState("");

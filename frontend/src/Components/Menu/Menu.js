@@ -6,12 +6,13 @@ import Cuenta from "../Cuentas/Cuentas";
 import CreateCuenta from "../Cuentas/CreateCuenta";
 import UpdateCuentas from "../Cuentas/UpdateCuenta";
 import Deposito from "../transaccion/transaccion";
+
 const Menu = (props) => {
+    let User
     let headers = {
         user: sessionStorage.getItem("user"),
         key: sessionStorage.getItem("key")
-    };
-    let User
+    };    
     const navigate = useNavigate();
     JSON.parse(sessionStorage.getItem("Rol")).forEach(element => {
         if (element.nombre === "ROLE_ADMIN") {
