@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link,useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import swal from "sweetalert";
 const URI = "http://localhost:8081/api/v1/transaccion/create"
 
 
 const Deposito = (props) => {
-  let headers=props.headers
-  const { id,tipo } = useParams()
+  let headers = props.headers
+  const { id, tipo } = useParams()
   const [valorTransaccion, setValorTransaccion] = useState("");
 
 
@@ -22,20 +22,20 @@ const Deposito = (props) => {
         method: "POST",
         url: URI,
         data: {
-          cuenta:{
-            id:id
+          cuenta: {
+            id: id
           },
-          valorTransaccion:valorTransaccion,
-          tipoTransaccion:tipo
+          valorTransaccion: valorTransaccion,
+          tipoTransaccion: tipo
         },
         headers: headers,
       });
       if (Transaccion.status === 201) {
 
-        swal("Deposito Realizado " ,"Presione el botón", "success")
-            .then((value)=>{
-                navigate("/cuentas")
-            });
+        swal((tipo === "D" ? ("Deposito") : ("Retiro")) + " Realizado", "Presione el botón", "success")
+          .then((value) => {
+            navigate("/cuentas")
+          });
 
 
       } else {
@@ -48,11 +48,10 @@ const Deposito = (props) => {
         );
       }
     } catch (error) {
-      swal(
-        "Error",
-        JSON.parse(error.request.response).errors[0].message,
-        "error"
-      );
+      swal("Error Retiro ",
+        JSON.parse(error.request.response).message,
+        "error");
+
     }
   };
 
@@ -63,17 +62,17 @@ const Deposito = (props) => {
         <h3>Consignar a cuenta </h3>
         <form onSubmit={Save}>
           <div className="mb-3">
-            <label className="form-label">Valor {tipo=="D"?("Deposito"):("Retiro")}</label>
+            <label className="form-label">Valor {tipo === "D" ? ("Deposito") : ("Retiro")}</label>
             <input
               value={valorTransaccion}
               onChange={(e) => setValorTransaccion(e.target.value)}
               type="number"
               className="form-control"
             />
-          </div>         
+          </div>
 
           <button type="submit" className="btn btn-outline-primary">
-            Realizar {tipo=="D"?("Deposito"):("Retiro")}
+            Realizar {tipo === "D" ? ("Deposito") : ("Retiro")}
           </button>{" "}
           <Link to={`/cuentas`} className='btn btn-outline-success'> Regresar</Link>
         </form>

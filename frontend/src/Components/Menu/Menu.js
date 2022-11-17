@@ -6,13 +6,14 @@ import Cuenta from "../Cuentas/Cuentas";
 import CreateCuenta from "../Cuentas/CreateCuenta";
 import UpdateCuentas from "../Cuentas/UpdateCuenta";
 import Deposito from "../transaccion/transaccion";
+import Transacciones from "../transaccion/Transacciones";
 
 const Menu = (props) => {
     let User
     let headers = {
         user: sessionStorage.getItem("user"),
         key: sessionStorage.getItem("key")
-    };    
+    };
     const navigate = useNavigate();
     JSON.parse(sessionStorage.getItem("Rol")).forEach(element => {
         if (element.nombre === "ROLE_ADMIN") {
@@ -51,29 +52,33 @@ const Menu = (props) => {
                 </div>
             </nav>
             <div>
-              {
-                props.ruta==="clientes"? <Cliente headers={headers}/>:""
+                {
+                    props.ruta === "clientes" ? <Cliente headers={headers} /> : ""
+
+                }
+                {
+                    props.ruta === "createCliente" ? <CreateCliente headers={headers} /> : ""
+                }
+                {
+                    props.ruta === "updateCliente" ? <UpdateCliente headers={headers} /> : ""
+                }
+                {
+                    props.ruta === "cuentas" ? <Cuenta headers={headers} user={User} /> : ""
+
+                }
+                {
+                    props.ruta === "createCuenta" ? <CreateCuenta headers={headers} /> : ""
+                }
+                {
+                    props.ruta === "updateCuenta" ? <UpdateCuentas headers={headers} /> : ""
+                }
+                {
+                    props.ruta === "transaccion" ? <Deposito headers={headers} /> : ""
+                }
+                {
+                    props.ruta === "transacciones" ? <Transacciones headers={headers} /> : ""
+                }
                 
-              }
-              {
-                props.ruta==="createCliente"? <CreateCliente headers={headers}/>:""
-              }
-              {
-                props.ruta==="updateCliente"? <UpdateCliente headers={headers}/>:""
-              }
-              {
-                props.ruta==="cuentas"? <Cuenta headers={headers} user={User}/>:""
-                
-              }
-              {
-                props.ruta==="createCuenta"? <CreateCuenta headers={headers}/>:""
-              }
-              {
-                props.ruta==="updateCuenta"? <UpdateCuentas headers={headers}/>:""
-              }
-              {
-                props.ruta==="transaccion"? <Deposito headers={headers}/>:""
-              }
             </div>
         </div>
 

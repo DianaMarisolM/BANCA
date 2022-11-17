@@ -16,8 +16,8 @@ const CreateCliente = (props) => {
 
     const navigate = useNavigate();
 
-    const Save = async (e) => {
-        e.preventDefault();
+    const Save = async () => {
+
 
         let listaRoles = [];
         for (const rol of roles) {
@@ -141,7 +141,7 @@ const CreateCliente = (props) => {
                             {"  "}
                         </div>
                     </div>
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn btn-outline-primary">
                         Guardar
                     </button>
                 </form>

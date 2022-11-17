@@ -17,7 +17,8 @@ const Cuenta = (props) => {
     const [Cuenta, setCuenta] = useState([]);
     useEffect(() => {
         getCuentas()
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
     //procedimineto para mostrar todos los blogs
 
 
@@ -51,6 +52,7 @@ const Cuenta = (props) => {
                         url: URID + id,
                         headers: headers
                     });
+                    console.log(res);
                     swal("El registro se borró satisfactoriamente", {
                         icon: "success",
                     }).then((value) => {

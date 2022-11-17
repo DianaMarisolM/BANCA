@@ -11,7 +11,8 @@ const Cliente = (props) => {
     const [Cliente, setCliente] = useState([]);
     useEffect(() => {
         getClientes()
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
     //procedimineto para mostrar todos los blogs
 
     
@@ -43,6 +44,7 @@ const Cliente = (props) => {
                         url: URID + id,
                         headers: headers
                     });
+                    console.log(res);
                     swal("El registro se borró satisfactoriamente", {
                         icon: "success",
                     }).then((value) => {
@@ -63,7 +65,7 @@ const Cliente = (props) => {
             <div className='container'>
                 <div className='row'>
                     <div className='col'>
-                        <Link to="/createCliente" className='btn btn-primary mt-2 mb-2'><i className="fas fa-plus"></i></Link>Administración de Usuarios
+                        <Link to="/createCliente" className='btn btn-outline-primary mt-2 mb-2'><i className="fas fa-plus"></i></Link>Administración de Usuarios
                         <table className='table'>
                             <thead className='table-primary'>
                                 <tr>
@@ -85,9 +87,9 @@ const Cliente = (props) => {
                                             role.nombre.replace("ROLE_", "") + " "
                                         ))} </td>
                                         <td>
-                                            <Link to={`/editCliente/${cliente.idCliente}`} className='btn btn-info'><i className="fas fa-edit"></i></Link>&nbsp;
+                                            <Link to={`/editCliente/${cliente.idCliente}`} className='btn btn-outline-info'><i className="fas fa-edit"></i></Link>&nbsp;
                                             {cliente.userName !== sessionStorage.getItem("user") ? (
-                                                <button onClick={() => deleteCliente(cliente.idCliente)} className='btn btn-danger'><i className="fas fa-trash-alt"></i></button>) : ""}
+                                                <button onClick={() => deleteCliente(cliente.idCliente)} className='btn btn-outline-danger'><i className="fas fa-trash-alt"></i></button>) : ""}
                                         </td>
                                     </tr>
                                 ))}

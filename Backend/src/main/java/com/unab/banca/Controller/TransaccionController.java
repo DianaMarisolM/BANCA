@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -41,8 +42,7 @@ public class TransaccionController {
             throw new NoAuthorizeException("Acceso No Autorizado",
                     new Error("Campo nombre", "Acceso no Autorizado "));
         }
-        transaccionService.createTransation(transaccion.getCuenta().getId() + "", transaccion.getValorTransaccion(),
-                transaccion.getTipoTransaccion());
+
 
         if (transaccion.getTipoTransaccion().equals("D")) {
             cuentaRepository.deposito(transaccion.getCuenta().getId(), transaccion.getValorTransaccion());
@@ -56,7 +56,8 @@ public class TransaccionController {
                         HttpStatus.BAD_REQUEST);
             }
         }
-
+        transaccionService.createTransation(transaccion.getCuenta().getId() + "", transaccion.getValorTransaccion(),
+                transaccion.getTipoTransaccion());
         return new ResponseEntity<>(new Message(201, "Tranccion Realizada"), HttpStatus.CREATED);
 
     }
@@ -85,9 +86,9 @@ public class TransaccionController {
     // return new ResponseEntity<>(obj, HttpStatus.INTERNAL_SERVER_ERROR);
     // return new ResponseEntity<>(obj, HttpStatus.OK);
     // }
-    @GetMapping("/list")
-    public List<Transaccion> consultarTodo() {
-        return transaccionService.findByAll();
+    @GetMapping("/list/{cuenta}")
+    public List<Transaccion> consultarTodo(@PathVariable String cuenta) {
+        return transaccionService.findByCuenta(cuenta);
     }
     // @GetMapping("/list/{id}")
     // public Transaccion consultaPorId(@PathVariable Integer id){

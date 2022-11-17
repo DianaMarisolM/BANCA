@@ -17,8 +17,7 @@ const UpdateCliente =(props) => {
     const { id } = useParams()
     const navigate = useNavigate();
 
-    const Save = async (e) => {
-        e.preventDefault();
+    const Save = async () => {
         let listaRoles = [];
         for (const rol of roles) {
             if (rol.checked) {
@@ -52,7 +51,8 @@ const UpdateCliente =(props) => {
 
     useEffect(() => {
         getUserById()
-    }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
     const getUserById = async () => {
 
@@ -150,7 +150,7 @@ const UpdateCliente =(props) => {
                         <label className="form-check-label">cash</label>
                         {"  "}
                     </div>
-                    <button type="submit" className="btn btn-primary">
+                    <button type="submit" className="btn btn-outline-primary">
                         Guardar
                     </button>
                 </form>

@@ -21,7 +21,7 @@ function App() {
           <Route path="/editCuenta/:id" element={<Menu ruta="updateCuenta" />} />
 
           <Route path="/transaccion/:id/:tipo" element={<Menu ruta="transaccion"  />} />
-          
+          <Route path="/transacciones/:id" element={<Menu ruta="transacciones"  />} />
 
           <Route path="/noFound" element={<NoFound />} />
 

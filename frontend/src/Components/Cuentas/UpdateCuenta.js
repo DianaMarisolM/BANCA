@@ -48,7 +48,8 @@ const UpdateCuentas = (props) => {
 
     useEffect(() => {
         getCuentaById()
-    }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
     const getCuentaById = async () => {
 
@@ -71,7 +72,8 @@ const UpdateCuentas = (props) => {
 
     useEffect(() => {
         getClientes()
-    }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[])
 
     const getClientes = async () => {
 
