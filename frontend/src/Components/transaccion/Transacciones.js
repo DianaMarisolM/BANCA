@@ -1,19 +1,20 @@
 import axios from 'axios'
+import "./Transacciones.css"
 import { useState, useEffect } from 'react'
-import { Link, useNavigate,useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 let URI = 'http://localhost:8081/api/v1/transaccion/list/'
 
 
 
 const Transacciones = (props) => {
-    let headers =props.headers
+    let headers = props.headers
     const { id } = useParams()
     const navigate = useNavigate();
     const [Transacciones, setTransacciones] = useState([]);
     useEffect(() => {
         getTransacciones()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     //procedimineto para mostrar todos los blogs
 
 
@@ -21,7 +22,7 @@ const Transacciones = (props) => {
         try {
             const res = await axios({
                 method: "GET",
-                url: URI+id,
+                url: URI + id,
                 headers: headers
             });
             console.log(res.data);
@@ -52,11 +53,15 @@ const Transacciones = (props) => {
                             <tbody>
 
                                 {Transacciones.map((transaccion) => (
+
                                     <tr key={transaccion.id}>
                                         <td> {transaccion.id} </td>
                                         <td> {transaccion.fechaTransaccion.substring(0, 10)} </td>
-                                        <td> {transaccion.valorTransaccion} </td>
-                                        <td> {transaccion.tipoTransaccion} </td>
+                                        <td className="izquierda" > {new Intl.NumberFormat('en-US', {
+                                            style: 'currency',
+                                            currency: 'USD'
+                                        }).format(transaccion.valorTransaccion)} </td>
+                                        <td ><i className="fa-regular fa-money-bill-1" /> {transaccion.tipoTransaccion} </td>
 
                                     </tr>
                                 ))}
