@@ -5,7 +5,7 @@ import swal from "sweetalert";
 import LonginHtml from "./LoginHtml";
 import "./Login.css";
 import axios from "axios";
-const URI = "http://localhost:8081/api/v1/cliente/login";
+const URI = "http://localhost:8080/api/v1/cliente/login";
 const Login = () => {
   const [key, setKey] = useState("");
   const [user, setUser] = useState("");

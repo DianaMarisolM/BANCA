@@ -3,9 +3,9 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import swal from "sweetalert"
-const URI = 'http://localhost:8081/api/v1/cuenta/list/'
-const URIU = 'http://localhost:8081/api/v1/cuenta/update/'
-const URIC = 'http://localhost:8081/api/v1/cliente/list'
+const URI = 'http://129.213.23.13:8080/bancasergio/api/v1/cuenta/list/'
+const URIU = 'http://129.213.23.13:8080/bancasergio/api/v1/cuenta/update/'
+const URIC = 'http://129.213.23.13:8080/bancasergio/api/v1/cliente/list'
 
 
 

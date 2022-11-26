@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateClienteDto {
     private String idCliente;
-    @Size(min = 5, message = "Debe tener mínimo 5 caracteres")
+        
     private String nombre;
     @Size(min = 5, message = "Debe tener mínimo 5 caracteres")
     private String apellido;

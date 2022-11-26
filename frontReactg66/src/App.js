@@ -1,6 +1,6 @@
 import "./App.css";
 import Login from "./componentes/Login/Login";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes,HashRouter } from "react-router-dom";
 import Menu from "./componentes/menu/Menu";
 import Padre from "./componentes/demo/Padre";
 import Clientes from "./componentes/clientes/Clientes";
@@ -12,7 +12,9 @@ const App = () => {
     <>
       <div className="container">
         {" "}
-        <BrowserRouter>
+        
+        <HashRouter>
+
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/menu" element={<Menu />} />
@@ -22,7 +24,7 @@ const App = () => {
             <Route path="/editCliente/:id" element={<UpdateCliente />} />
             
           </Routes>
-        </BrowserRouter>
+        </HashRouter>
       </div>
     </>
   );

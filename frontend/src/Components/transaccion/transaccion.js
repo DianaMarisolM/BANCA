@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import swal from "sweetalert";
-const URI = "http://localhost:8081/api/v1/transaccion/create"
+const URI = "http://129.213.23.13:8080/bancasergio/api/v1/transaccion/create"
 
 
 const Deposito = (props) => {

@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react'
 import {  useNavigate, useParams } from 'react-router-dom'
 import swal from "sweetalert"
 import Menu from '../menu/Menu'
-const URI = 'http://localhost:8081/api/v1/cliente/list/'
-const URIU = 'http://localhost:8081/api/v1/cliente/update/'
+const URI = 'http://localhost:8080/api/v1/cliente/list/'
+const URIU = 'http://localhost:8080/api/v1/cliente/update/'
 
 
 

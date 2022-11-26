@@ -5,8 +5,8 @@ import swal from "sweetalert";
 import { useState, useEffect } from "react";
 
 import { Link } from "react-router-dom";
-const URI = "http://localhost:8081/api/v1/cliente/list";
-const URID ="http://localhost:8081/api/v1/cliente/delete/"
+const URI = "http://localhost:8080/api/v1/cliente/list";
+const URID ="http://localhost:8080/api/v1/cliente/delete/"
 const Clientes = () => {
   const [Cliente, setCliente] = useState([]);
   let headers = {

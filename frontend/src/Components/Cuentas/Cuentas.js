@@ -3,15 +3,15 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import swal from "sweetalert"
 let URI = ''
-const URID = 'http://localhost:8081/api/v1/cuenta/delete/'
+const URID = 'http://129.213.23.13:8080/bancasergio/api/v1/cuenta/delete/'
 
 
 const Cuenta = (props) => {
     let headers =props.headers
     if (props.user == null) {
-        URI = 'http://localhost:8081/api/v1/cuenta/list/cliente/' + sessionStorage.getItem("id")
+        URI = 'http://129.213.23.13:8080/bancasergio/api/v1/cuenta/list/cliente/' + sessionStorage.getItem("id")
     }else{
-        URI = 'http://localhost:8081/api/v1/cuenta/list'
+        URI = 'http://129.213.23.13:8080/bancasergio/api/v1/cuenta/list'
     }
     const navigate = useNavigate();
     const [Cuenta, setCuenta] = useState([]);

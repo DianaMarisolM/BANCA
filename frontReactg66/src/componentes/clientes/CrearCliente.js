@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import Menu from "../menu/Menu";
-const URI = "http://localhost:8081/api/v1/cliente/create";
+const URI = "http://localhost:8080/api/v1/cliente/create";
 
 const CreateCliente = () => {
   let headers = {

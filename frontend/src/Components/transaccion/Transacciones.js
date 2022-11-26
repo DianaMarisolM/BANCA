@@ -2,7 +2,7 @@ import axios from 'axios'
 import "./Transacciones.css"
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-let URI = 'http://localhost:8081/api/v1/transaccion/list/'
+let URI = 'http://129.213.23.13:8080/bancasergio/api/v1/transaccion/list/'
 
 
 

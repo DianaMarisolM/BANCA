@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
-const URI = "http://localhost:8081/api/v1/cliente/create";
+const URI = "http://129.213.23.13:8080/bancasergio/api/v1/cliente/create";
 
 
 

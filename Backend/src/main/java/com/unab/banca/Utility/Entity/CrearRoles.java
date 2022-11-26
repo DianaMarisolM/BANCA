@@ -38,6 +38,7 @@ public class CrearRoles implements CommandLineRunner {
             rolService.save(rolModerator);
             rolService.save(rolCahser);
         }
+        System.out.println(Hash.sha1("123456"));
         if (clienteService.findAll().size() == 0) {
             Role userRole = roleRepository.findByNombre(ERole.ROLE_ADMIN).get();
             Set<Role> roles = new HashSet<>();

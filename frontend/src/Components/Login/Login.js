@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 
 import "./Login.css"
 
-const URI = "http://localhost:8081/api/v1/cliente/login";
+const URI = "http://129.213.23.13:8080/bancasergio/api/v1/cliente/login";
 const Login = () => {
     const [User, setUser] = useState("");
     const [PassWord, setPassWord] = useState("");

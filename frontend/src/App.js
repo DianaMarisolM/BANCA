@@ -3,12 +3,12 @@ import Login from './Components/Login/Login';
 import Principal from './Components/Principal/Principal';
 import NoFound from './Components/NoFound';
 import Menu from './Components/Menu/Menu';
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { Route, Routes,HashRouter } from "react-router-dom"
 function App() {
   
   return (
     <div className="App">
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/principal" element={<Principal />} />
@@ -27,7 +27,7 @@ function App() {
 
           
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
 
     </div>
   );
