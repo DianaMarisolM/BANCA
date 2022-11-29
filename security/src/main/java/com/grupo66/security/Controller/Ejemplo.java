@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class Ejemplo {
 
     @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN') ")
     public String message(){
         return "Texto de prueba";
     }
