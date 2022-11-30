@@ -8,9 +8,7 @@ import "./Producto.css";
 
 const URIP = getApiUrl("producto/list");
 const URID = getApiUrl("producto/delete/")
-const Producto = (props) => {
-  console.log(URIP);
-  let headers = props.headers;
+const Producto = () => {
   const navigate = useNavigate();
   const [Producto, setProducto] = useState([]);
   useEffect(() => {
@@ -23,8 +21,7 @@ const Producto = (props) => {
     try {
       const res = await axios({
         method: "GET",
-        url: URIP,
-        headers: headers,
+        url: URIP
       });
       setProducto(res.data);
     } catch (error) {
@@ -43,8 +40,7 @@ const Producto = (props) => {
       if (willDelete) {
         const res = await axios({
           method: "DELETE",
-          url: URID + id,
-          headers: headers,
+          url: URID + id
         });
         console.log(res);
         swal("El registro se borró satisfactoriamente", {
