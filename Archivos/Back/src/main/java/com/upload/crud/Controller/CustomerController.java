@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.upload.crud.Entity.Customer;
 import com.upload.crud.Service.CustomerService;
+import com.upload.crud.Validation.Exception.InvalidDataException;
 
 @RestController
 @RequestMapping("/api/v1/customer")
@@ -27,11 +28,7 @@ public class CustomerController {
     public ResponseEntity<Object> save(@Valid @RequestBody Customer customer, BindingResult result) {
 
         if (result.hasErrors()) {
-            List<String> messages = result
-                    .getFieldErrors()
-                    .stream()
-                    .map(e -> e.getDefaultMessage()).collect(Collectors.toList());
-            return new ResponseEntity<>(messages, null, HttpStatus.BAD_REQUEST);
+            throw new InvalidDataException("Error de datos",result);
         }
         return new ResponseEntity<>(customerService.save(customer), null, HttpStatus.OK);
     }
