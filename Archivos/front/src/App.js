@@ -4,10 +4,13 @@ import { Route, Routes, HashRouter } from "react-router-dom";
 import CreateProducto from "./Componentes/Productos/CreateProducto";
 import EditProducto from "./Componentes/Productos/EditProducto";
 import Cart from "./Componentes/Cart/Cart";
+import Menu from "./Componentes/Navbar/Menu";
+
 function App() {
   return (
     <div className="App">
       <HashRouter>
+        <Menu></Menu>
         <Routes>
           <Route exact path="/" element={<Producto />} />
           <Route exact path="/createProducto" element={<CreateProducto/>} />

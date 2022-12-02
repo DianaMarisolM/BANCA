@@ -4,10 +4,10 @@ import axios from "axios";
 import { getApiUrl } from "../config/apiConfig";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import swal from "sweetalert";
+
 
 const URIP = getApiUrl("producto/list");
-const URID = getApiUrl("producto/delete/");
+
 const Cart = () => {
   const navigate = useNavigate();
   const [Producto, setProducto] = useState([]);
